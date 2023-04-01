@@ -1,0 +1,22 @@
+{
+  "name": "steam-web",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepare": "rm -rf dist && tsc --outDir dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "description": "",
+  "keywords": [],
+  "author": "waspyru",
+  "license": "ISC",
+  "dependencies": {
+    "steam-session": "github:waspyro/steam-session"
+  },
+  "devDependencies": {}
+}
