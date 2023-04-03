@@ -1,8 +1,9 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
+import {ProfileUrlParts} from "./types";
 
 type Props = {
-    profileUrl: [full: string, id: string, type: 'profiles' | 'id']
+    profileUrl: ProfileUrlParts
 }
 
 export default class SteamWeb {
@@ -15,10 +16,9 @@ export default class SteamWeb {
     }
 
     async updateMyProfileURL() {
-        this.props.profileUrl = await this.session.me()
-        return this.props.profileUrl
+        const profile = await this.session.me()
+        if(!profile) throw new Error('Unable to get profile url')
+        return this.props.profileUrl = [profile[2], profile[1], profile[0]]
     }
-
-    catcher(error, func, args) {}
 
 }
