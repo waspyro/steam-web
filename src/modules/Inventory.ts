@@ -1,11 +1,11 @@
 import SteamWeb from "../index";
-import InventoryRequests, {InventoryItemsResponse} from "../requests/InventoryRequests";
+import InventoryRequests, {InventoryContexts, InventoryItemsResponse} from "../requests/InventoryRequests";
 import {defaultify, uMake} from "../utils";
 import {uCommunity} from "../assets/urls";
 import {getSuccessfulJsonFromResponse} from "steam-session/dist/utils";
-import {obj} from "steam-session/dist/extra/types";
-import {needsProp} from "../utils/decorators";
-import {AtLeast, InventoryRequestOpts} from "../types";
+import {AtLeast, InventoryRequestOpts, ProfileUrlParts} from "../types";
+import {getSuccessfullText} from "../utils/responseProcessors";
+import parseInventoryContexts from "../parsers/parseInventoryContexts";
 
 export default class Inventory {
     requests: InventoryRequests
@@ -27,15 +27,18 @@ export default class Inventory {
         return this.#get(defaultify(Inventory.defaultInventoryRequestParams, opts))
     }
 
-    @needsProp('steamid') @needsProp('profile')
-    getSelf(opts: Omit<Partial<InventoryRequestOpts>, 'steamid' | 'referer'> & obj) {
-        opts.steamid = this.web.session.steamid
-        opts.referer = this.web.props.profileUrl[0]
-        return this.#get(defaultify(Inventory.defaultInventoryRequestParams, opts as InventoryRequestOpts))
-    }
-
-    async *it() {
-
+    async *it(requestOpts: AtLeast<InventoryRequestOpts, 'steamid'>, limit = Infinity) {
+        requestOpts = defaultify(Inventory.defaultInventoryRequestParams, requestOpts)
+        while (limit > 0) {
+            if((limit -= requestOpts.count) < 0) requestOpts.count += limit //{count: 2000} && limit 4100 = [2000, 2000, 100]
+            const results = await this.#get(requestOpts as InventoryRequestOpts)
+            if (!results.descriptions) results.descriptions = []
+            if (!results.assets) results.assets = []
+            for (const d of results.descriptions) d.contextid = requestOpts.contextid
+            yield {assets: results.assets, descriptions: results.descriptions}
+            if (!results.more_items) break
+            requestOpts.startAssetid = results.last_assetid
+        }
     }
 
     load() {}
