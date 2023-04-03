@@ -43,8 +43,14 @@ export default class Inventory {
 
     load() {}
 
-    getInventoryContexts() {}
-
-
+    getInventoryContexts(profileUrl: ProfileUrlParts): Promise<InventoryContexts> {
+        return this.requests.inventoryPage(profileUrl)
+            .then(getSuccessfullText)
+            .then(text => {
+                const ctxs = parseInventoryContexts(text)
+                if(ctxs === null) throw new Error('Unable to parse inventory contexts from page')
+                return ctxs
+            })
+    }
 
 }

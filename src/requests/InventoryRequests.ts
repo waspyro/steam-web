@@ -2,7 +2,7 @@ import SteamWeb from "../index";
 import {uCommunity, uInventory} from "../assets/urls";
 import {uMake} from "../utils";
 import {obj} from "steam-session/dist/extra/types";
-import {InventoryRequestOpts} from "../types";
+import {InventoryRequestOpts, ProfileUrlParts} from "../types";
 
 export default class InventoryRequests {
     constructor(private web: SteamWeb) {}
@@ -16,8 +16,8 @@ export default class InventoryRequests {
         return this.web.session.request(url, {headers})
     }
 
-    inventoryPage = ([profiletype, profileid]) => {
-        return this.web.session.request(uMake(uCommunity, [profiletype, profileid]))
+    inventoryPage = ([type, id]: ProfileUrlParts) => {
+        return this.web.session.request(uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
     }
 
 }
@@ -27,7 +27,7 @@ export type descriptionCommon = {
     classid: string,
     instanceid: string,
     currency: number,
-    tradable: number,
+    tradable: number | 1 | 0,
     name: string,
     market_name: string,
     market_hash_name: string,
@@ -39,7 +39,7 @@ export type descriptionCommon = {
 
 export type asset = {
     appid: number,
-    contextid: string,
+    contextid?: string,
     assetid: string,
     classid: string,
     instanceid: string,
@@ -56,3 +56,33 @@ export type InventoryItemsResponse = {
     descriptions: descriptionCommon[]
 }
 
+export const KnownAppids = {
+    '440': 'Team Fortress 2',
+    '570': 'Dota 2',
+    '620': 'Portal 2',
+    '730': 'Counter-Strike: Global Offensive',
+    '753': 'Steam',
+    '578080': 'PUBG: BATTLEGROUNDS',
+} as const
+
+export type InventoryContexts = {
+    [appid in keyof typeof KnownAppids | string]: {
+        appid: number,
+        name: string,
+        icon: string,
+        link: string,
+        asset_count: number,
+        inventory_logo: string,
+        trade_permissions: string | 'FULL',
+        load_failed: number | 0 | 1,
+        store_vetted: string | '1',
+        owner_only: boolean,
+        rgContexts: {
+            [contextid: '1' | '2' | '3' | '4' | '5' | '6' | string]: {
+                asset_count: number,
+                id: string,
+                name: string
+            } & obj
+        }
+    } & obj
+}
