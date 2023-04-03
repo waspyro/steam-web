@@ -18,5 +18,7 @@
   "dependencies": {
     "steam-session": "github:waspyro/steam-session"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "persistorm": "github:waspyro/persistorm"
+  }
 }
