@@ -7,7 +7,10 @@ import {InventoryRequestOpts, ProfileUrlParts} from "../types";
 type ResponseProcessor = (resp: Response) => any
 
 export default class InventoryRequests {
-    constructor(private web: SteamWeb) {}
+    request: SteamWeb['processRequestBond']
+    constructor(private web: SteamWeb) {
+        this.request = web.processRequestBond
+    }
 
     inventoryItems = ({
         steamid, appid, contextid, count, startAssetid: start_assetid, language: l, referer
@@ -15,13 +18,32 @@ export default class InventoryRequests {
         const url = uMake(uInventory, [steamid, appid, contextid], {l, count, start_assetid})
         const headers = {'X-Requested-With': 'XMLHttpRequest'} as any
         if(referer) headers.Referer = uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
-        return this.web.processRequestBond(true, url, {headers})
+        return this.request(true, url, {headers})
     }
 
     inventoryPage = ([type, id]: ProfileUrlParts) => {
-        return this.web.processRequestBond(false, uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
+        return this.request(false, uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
     }
 
+    unpackBooster = (sessionid: string, [type, id]: ProfileUrlParts, appid: string, assetid: string) => {
+        const base = uMake(uCommunity, [type, id])
+        const Referer = uMake(base, ['inventory']).toString()
+        return this.request(true, uMake(base, ['ajaxunpackbooster']), {
+            method: 'POST',
+            body: new URLSearchParams({appid: String(appid), communityitemid: assetid, sessionid}),
+            headers: {Origin: uCommunity, Referer}
+        })
+    }
+}
+
+export type OpenBoosterPackResponse = {
+    "success": 1 | number,
+    "rgItems": {
+        "image": string,
+        "name": string,
+        "series": number | 1,
+        "foil": boolean
+    }[]
 }
 
 export type descriptionCommon = {

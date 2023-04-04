@@ -3,13 +3,14 @@ import InventoryRequests, {
     asset, AssetsDescriptionsCollection,
     descriptionCommon,
     InventoryContexts,
-    InventoryItemsResponse
+    InventoryItemsResponse, OpenBoosterPackResponse
 } from "../requests/InventoryRequests";
 import {defaultify} from "../utils";
-import {getSuccessfulJsonFromResponse} from "steam-session/dist/utils";
+import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/utils";
 import {AtLeast, InventoryRequestOpts, OneOfInventory, WholeInventoryOpts} from "../types";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseInventoryContexts from "../parsers/parseInventoryContexts";
+import {needsProp} from "../utils/decorators";
 
 export default class Inventory {
     requests: InventoryRequests
@@ -79,6 +80,19 @@ export default class Inventory {
             const ctxs = parseInventoryContexts(text)
             if(ctxs === null) throw new Error('Unable to parse inventory contexts from page')
             return ctxs
+        })
+    }
+
+    //steam returns 500 status code if details is bad, so we cannot be sure if we should
+    //retry request because steam is down or just throw error because it is bad pack :(
+    @needsProp('steamid') @needsProp('profile')
+    openBoosterPack(boosterAppId: string, assetid: string): Promise<OpenBoosterPackResponse['rgItems']> {
+        const sessionid = this.web.session.sessionid
+        const profile = this.web.props.profileUrl
+        return this.requests.unpackBooster(sessionid, profile, boosterAppId, assetid)
+        (getSuccessfulResponseJson).then((r: OpenBoosterPackResponse) => {
+            if(!r.rgItems) throw new Error('Unable to open pack. Response: \n' + JSON.stringify(r))
+            return r.rgItems
         })
     }
 
