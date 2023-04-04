@@ -18,8 +18,7 @@ export default class Inventory {
     }
 
     #get(opts: InventoryRequestOpts): Promise<InventoryItemsResponse>  {
-        return this.requests.inventoryItems(opts)
-            .then(getSuccessfulJsonFromResponse)
+        return this.requests.inventoryItems(opts)(getSuccessfulJsonFromResponse)
     }
 
     get(opts: AtLeast<InventoryRequestOpts, 'steamid'>) {
@@ -44,13 +43,11 @@ export default class Inventory {
     load() {}
 
     getInventoryContexts(profileUrl: ProfileUrlParts): Promise<InventoryContexts> {
-        return this.requests.inventoryPage(profileUrl)
-            .then(getSuccessfullText)
-            .then(text => {
-                const ctxs = parseInventoryContexts(text)
-                if(ctxs === null) throw new Error('Unable to parse inventory contexts from page')
-                return ctxs
-            })
+        return this.requests.inventoryPage(profileUrl)(getSuccessfullText).then(text => {
+            const ctxs = parseInventoryContexts(text)
+            if(ctxs === null) throw new Error('Unable to parse inventory contexts from page')
+            return ctxs
+        })
     }
 
 }

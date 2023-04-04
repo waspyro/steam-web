@@ -16,6 +16,7 @@
   "author": "waspyru",
   "license": "ISC",
   "dependencies": {
+    "listenable": "github:waspyro/ts-listenable",
     "steam-session": "github:waspyro/steam-session"
   },
   "devDependencies": {

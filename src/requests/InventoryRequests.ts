@@ -4,20 +4,22 @@ import {uMake} from "../utils";
 import {obj} from "steam-session/dist/extra/types";
 import {InventoryRequestOpts, ProfileUrlParts} from "../types";
 
+type ResponseProcessor = (resp: Response) => any
+
 export default class InventoryRequests {
     constructor(private web: SteamWeb) {}
 
     inventoryItems = ({
       steamid, appid, contextid, count, startAssetid: start_assetid,
-      language: l, referer: Referer}: InventoryRequestOpts
-    ) => {
+      language: l, referer: Referer
+    }: InventoryRequestOpts) => {
         const url = uMake(uInventory, [steamid, appid, contextid], {l, count, start_assetid})
         const headers = {Referer, 'X-Requested-With': 'XMLHttpRequest'}
-        return this.web.session.request(url, {headers})
+        return this.web.processRequestBond(true, url, {headers})
     }
 
     inventoryPage = ([type, id]: ProfileUrlParts) => {
-        return this.web.session.request(uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
+        return this.web.processRequestBond(false, uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
     }
 
 }
