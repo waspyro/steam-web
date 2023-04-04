@@ -10,11 +10,11 @@ export default class InventoryRequests {
     constructor(private web: SteamWeb) {}
 
     inventoryItems = ({
-      steamid, appid, contextid, count, startAssetid: start_assetid,
-      language: l, referer: Referer
+        steamid, appid, contextid, count, startAssetid: start_assetid, language: l, referer
     }: InventoryRequestOpts) => {
         const url = uMake(uInventory, [steamid, appid, contextid], {l, count, start_assetid})
-        const headers = {Referer, 'X-Requested-With': 'XMLHttpRequest'}
+        const headers = {'X-Requested-With': 'XMLHttpRequest'} as any
+        if(referer) headers.Referer = uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
         return this.web.processRequestBond(true, url, {headers})
     }
 
@@ -48,6 +48,11 @@ export type asset = {
     amount: string
 }
 
+export type AssetsDescriptionsCollection = {
+    assets: asset[],
+    descriptions: descriptionCommon[]
+}
+
 export type InventoryItemsResponse = {
     more_items: number,
     last_assetid: string,
@@ -67,7 +72,7 @@ export const KnownAppids = {
     '578080': 'PUBG: BATTLEGROUNDS',
 } as const
 
-export type InventoryContexts = {
+export type InventoryContexts<T = obj> = {
     [appid in keyof typeof KnownAppids | string]: {
         appid: number,
         name: string,
@@ -84,7 +89,7 @@ export type InventoryContexts = {
                 asset_count: number,
                 id: string,
                 name: string
-            } & obj
+            } & obj & T
         }
     } & obj
 }

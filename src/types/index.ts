@@ -1,13 +1,22 @@
 export type InventoryRequestOpts = {
     steamid: string,
-    startAssetid?: string,
     appid: string | number,
     contextid: string | number,
-    language?: string,
     count: number,
-    referer?: string
+    language?: string,
+    referer?: ProfileUrlParts
+    startAssetid?: string,
 }
+
+export type WholeInventoryOpts = {
+    steamid: string,
+    referer?: ProfileUrlParts,
+    language?: string,
+    count?: number
+}
+
+export type OneOfInventory = {steamid?: string, referer?: ProfileUrlParts}
 
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
 
-export type ProfileUrlParts = [type: string, id: string, full?: string]
+export type ProfileUrlParts = [type: 'profiles' | 'id' | string, id: string, full?: string]
