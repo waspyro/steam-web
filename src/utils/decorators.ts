@@ -1,4 +1,5 @@
 import SteamWeb from "../index";
+import {wait} from "./index";
 
 interface SteamWebModule {
     web: SteamWeb
@@ -34,5 +35,23 @@ export function needsProp(prop: KnownProps) {
                 return (this[key] = originalMethod).apply(this, args)
             })
         }
+    }
+}
+
+export function retryable(target: any, key: string, descriptor: PropertyDescriptor) {
+    let originalMethod = descriptor.value, triesLeft = 5, retryDelay = 500
+    const reset = (andReturn) => {
+        triesLeft = 5
+        retryDelay = 500
+        return andReturn
+    }
+    descriptor.value = function(...args: any[]) {
+        return originalMethod.apply(this, args)
+            .then(r => reset(r))
+            .catch(e => {
+                if(triesLeft-- < 0) throw reset(e)
+                return wait(retryDelay *= 2)
+                    .then(() => descriptor.value.apply(this, ...args))
+            })
     }
 }

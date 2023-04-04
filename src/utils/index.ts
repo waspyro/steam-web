@@ -17,3 +17,5 @@ export const defaultify = <T extends obj, Y extends obj>(defaultsObject: T, obje
         if(object[key] === undefined) (object[key] as any) = defaultsObject[key]
     return object as T&Y
 }
+
+export const wait = (time: number) => new Promise(r => setTimeout(r, time))
