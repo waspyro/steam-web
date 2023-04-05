@@ -1,39 +1,33 @@
-import SteamWeb from "../index";
 import {uCommunity, uInventory} from "../assets/urls";
 import {uMake} from "../utils";
 import {obj} from "steam-session/dist/extra/types";
-import {InventoryRequestOpts, ProfileUrlParts} from "../types";
+import {InventoryRequestOpts, ProfileUrlParts, RequestConstructor} from "../types";
 
-type ResponseProcessor = (resp: Response) => any
+export const inventoryItems = (
+    {steamid, appid, contextid, count, startAssetid: start_assetid, language: l, referer}: InventoryRequestOpts
+) => {
+    const url = uMake(uInventory, [steamid, appid, contextid], {l, count, start_assetid})
+    const headers = {'X-Requested-With': 'XMLHttpRequest'} as any
+    if(referer) headers.Referer = uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
+    return [url, {headers}] as const
+}
 
-export default class InventoryRequests {
-    request: SteamWeb['processRequestBond']
-    constructor(private web: SteamWeb) {
-        this.request = web.processRequestBond
-    }
+export const inventoryPage: RequestConstructor = (
+    [type, id]: ProfileUrlParts
+) => {
+    return [uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2}]
+}
 
-    inventoryItems = ({
-        steamid, appid, contextid, count, startAssetid: start_assetid, language: l, referer
-    }: InventoryRequestOpts) => {
-        const url = uMake(uInventory, [steamid, appid, contextid], {l, count, start_assetid})
-        const headers = {'X-Requested-With': 'XMLHttpRequest'} as any
-        if(referer) headers.Referer = uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
-        return this.request(true, url, {headers})
-    }
-
-    inventoryPage = ([type, id]: ProfileUrlParts) => {
-        return this.request(false, uMake(uCommunity, [type, id, 'inventory']), {followRedirects: 2})
-    }
-
-    unpackBooster = (sessionid: string, [type, id]: ProfileUrlParts, appid: string, assetid: string) => {
-        const base = uMake(uCommunity, [type, id])
-        const Referer = uMake(base, ['inventory']).toString()
-        return this.request(true, uMake(base, ['ajaxunpackbooster']), {
-            method: 'POST',
-            body: new URLSearchParams({appid: String(appid), communityitemid: assetid, sessionid}),
-            headers: {Origin: uCommunity, Referer}
-        })
-    }
+export const unpackBooster= (
+    sessionid: string, [type, id]: ProfileUrlParts, appid: string, assetid: string
+) => {
+    const base = uMake(uCommunity, [type, id])
+    const Referer = uMake(base, ['inventory']).toString()
+    return [uMake(base, ['ajaxunpackbooster']), {
+        method: 'POST',
+        body: new URLSearchParams({appid: String(appid), communityitemid: assetid, sessionid}),
+        headers: {Origin: uCommunity, Referer}
+    }] as const
 }
 
 export type OpenBoosterPackResponse = {

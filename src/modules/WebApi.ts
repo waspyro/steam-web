@@ -1,17 +1,17 @@
 import SteamWeb from "../index";
-import WebApiRequests from "../requests/WebApiRequests";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseWebApiPage from "../parsers/parseWebApiPage";
+import {apikeyPage, register, revoke} from "../requests/WebApiRequests";
 
 export default class WebApi {
-    requests: WebApiRequests
+    private readonly request: SteamWeb['processRequest']
 
     constructor(private web: SteamWeb) {
-        this.requests = new WebApiRequests(web)
+        this.request = web.processRequest
     }
 
     check() {
-        return this.requests.apikeyPage()(getSuccessfullText).then(text => {
+        return this.request(true, apikeyPage)(getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
             if(key.status === 'exists') this.web.props.webapi = key.key
             return key
@@ -19,7 +19,7 @@ export default class WebApi {
     }
 
     revoke() {
-        return this.requests.revoke(this.web.session.sessionid)
+        return this.request(true, revoke, this.web.session.sessionid)
         (getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
             if(key.status === 'exists') throw new Error('unable to revoke key')
@@ -29,7 +29,7 @@ export default class WebApi {
     }
 
     register(domain: string) {
-        return this.requests.register(this.web.session.sessionid, domain)
+        return this.request(true, register, this.web.session.sessionid, domain)
         (getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
             if(key.status !== 'exists') throw new Error('unable to register key')

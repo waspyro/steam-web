@@ -1,3 +1,5 @@
+import {RequestOpts} from "steam-session/dist/extra/types";
+
 export type InventoryRequestOpts = {
     steamid: string,
     appid: string | number,
@@ -20,3 +22,5 @@ export type OneOfInventory = {steamid?: string, referer?: ProfileUrlParts}
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
 
 export type ProfileUrlParts = [type: 'profiles' | 'id' | string, id: string, full?: string]
+
+export type RequestConstructor = (...args: any[]) => [URL, RequestOpts?]

@@ -3,7 +3,7 @@ import {obj} from "steam-session/dist/extra/types";
 export const EMPA = []
 export const EMPO = {}
 
-export const uMake = (base: string | URL, path: (string|number)[] = EMPA, opts: obj = EMPO) => {
+export const uMake = (base: string | URL, path: (string|number)[] = EMPA, opts: obj = EMPO): URL => {
     const url = new URL([base, ...path].join('/'))
     for(const k in opts)
         if(opts[k] !== undefined)

@@ -1,21 +1,21 @@
 import SteamWeb from "../index";
-import InventoryRequests, {
+import {
     asset, AssetsDescriptionsCollection,
     descriptionCommon,
-    InventoryContexts,
-    InventoryItemsResponse, OpenBoosterPackResponse
+    InventoryContexts, inventoryItems,
+    InventoryItemsResponse, inventoryPage, OpenBoosterPackResponse, unpackBooster
 } from "../requests/InventoryRequests";
 import {defaultify} from "../utils";
 import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/utils";
-import {AtLeast, InventoryRequestOpts, OneOfInventory, WholeInventoryOpts} from "../types";
+import {AtLeast, InventoryRequestOpts, OneOfInventory, ProfileUrlParts, WholeInventoryOpts} from "../types";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseInventoryContexts from "../parsers/parseInventoryContexts";
 import {needsProp} from "../utils/decorators";
 
 export default class Inventory {
-    requests: InventoryRequests
+    private readonly request: SteamWeb['processRequest']
     constructor(private web: SteamWeb) {
-        this.requests = new InventoryRequests(web)
+        this.request = web.processRequest
     }
 
     private static readonly defaultInventoryRequestParams = {
@@ -28,7 +28,7 @@ export default class Inventory {
     }
 
     #get(opts: InventoryRequestOpts): Promise<InventoryItemsResponse>  {
-        return this.requests.inventoryItems(opts)(getSuccessfulJsonFromResponse)
+        return this.request(true, inventoryItems, opts)(getSuccessfulJsonFromResponse)
     }
 
     async *it(opts: AtLeast<InventoryRequestOpts, 'steamid'>, limit = Infinity) {
@@ -73,23 +73,23 @@ export default class Inventory {
         return contexts as InventoryContexts<{items: AssetsDescriptionsCollection}>
     }
 
-    //todo: should be type {steamid: string} | {referer: ProfileUrlParts} don't know how to satisfy ts with this
-    getContexts(opts: OneOfInventory): Promise<InventoryContexts> {
+    getContexts(opts: {steamid: string, referer?: ProfileUrlParts}): Promise<InventoryContexts> {
         if(!opts.referer) opts.referer = ['profiles', opts.steamid]
-        return this.requests.inventoryPage(opts.referer)(getSuccessfullText).then(text => {
+        return this.request(false, inventoryPage, opts.referer)
+        (getSuccessfullText).then(text => {
             const ctxs = parseInventoryContexts(text)
             if(ctxs === null) throw new Error('Unable to parse inventory contexts from page')
             return ctxs
         })
     }
 
-    //steam returns 500 status code if details is bad, so we cannot be sure if we should
-    //retry request because steam is down or just throw error because it is bad pack :(
+    // steam returns 500 status code if details is bad, so we cannot be sure if we should
+    // retry request because steam is down or just throw error because it is bad pack :(
     @needsProp('steamid') @needsProp('profile')
     openBoosterPack(boosterAppId: string, assetid: string): Promise<OpenBoosterPackResponse['rgItems']> {
         const sessionid = this.web.session.sessionid
         const profile = this.web.props.profileUrl
-        return this.requests.unpackBooster(sessionid, profile, boosterAppId, assetid)
+        return this.request(true, unpackBooster, sessionid, profile, boosterAppId, assetid)
         (getSuccessfulResponseJson).then((r: OpenBoosterPackResponse) => {
             if(!r.rgItems) throw new Error('Unable to open pack. Response: \n' + JSON.stringify(r))
             return r.rgItems

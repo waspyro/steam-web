@@ -1,30 +1,17 @@
-import SteamWeb from "../index";
 import {uApiKey, uApiKeyRegister, uApiKeyRevoke} from "../assets/urls";
 import {EMPA, uMake} from "../utils";
+import {RequestConstructor} from "../types";
 
-export default class WebApiRequests {
-    request: SteamWeb['processRequestBond']
+export const apikeyPage: RequestConstructor = () => [
+    uMake(uApiKey, EMPA, {l: 'english'})
+]
 
-    constructor(private web: SteamWeb) {
-        this.request = web.processRequestBond
-    }
+export const register: RequestConstructor = (sessionid: string, domain: string) => [
+    uMake(uApiKeyRegister), {
+    method: 'POST', body: new URLSearchParams({sessionid, domain, agreeToTerms: 'agreed', Submit: 'Register'})
+}]
 
-    apikeyPage = () => {
-        return this.request(true, uMake(uApiKey, EMPA, {l: 'english'}))
-    }
-
-    register = (sessionid: string, domain: string) => {
-        return this.request(true, uMake(uApiKeyRegister), {
-            method: 'POST',
-            body: new URLSearchParams({sessionid, domain, agreeToTerms: 'agreed', Submit: 'Register'})
-        })
-    }
-
-    revoke = (sessionid: string) => {
-        return this.request(true, new URL(uApiKeyRevoke), {
-            method: 'POST',
-            body: new URLSearchParams({sessionid, Revoke: 'Revoke+My+Steam+Web+API+Key'})
-        })
-    }
-
-}
+export const revoke: RequestConstructor = (sessionid: string) => [
+    new URL(uApiKeyRevoke) as URL, {
+    method: 'POST', body: new URLSearchParams({sessionid, Revoke: 'Revoke+My+Steam+Web+API+Key'})
+}]

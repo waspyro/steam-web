@@ -1,7 +1,6 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
 import {ProfileUrlParts} from "./types";
-import {wait} from "./utils";
 import {RequestOpts} from "steam-session/dist/extra/types";
 import {getResponseAndDrain, ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
@@ -27,31 +26,29 @@ export default class SteamWeb {
         }>()
     }
 
-    //todo: this function should not retry on its own, but redirect details to somewhere to make a decision
-    processRequest(
+    registerRequest = (meta) => Promise.resolve(true)       //there should be global request limiters
+    registerError = (error, meta) => Promise.reject(error)  //there may be some global error handling strategies
+
+    processRequest = <ARGS extends Array<any>, Y extends readonly [URL, RequestOpts?]>(
         authorized: boolean,
-        url: URL,
-        opts?: RequestOpts,
+        requestConstructor: (...args: ARGS) => Y, //the easiest way to identify request for limiter and catcher
+        ...requestConstructorArgs: ARGS           //useful for debugging
+    ) => (
+        //by design: this should check that response comes as expected i.e. no timeout and no steam is down
+        //but maybe all response should be handled by this...
         responseProcessor: ResponseProcessor = getResponseAndDrain
-    ): Promise<ReturnType<typeof responseProcessor>> {
+    ): ReturnType<typeof responseProcessor> => {
         const request = this.session[authorized ? 'authorizedRequest' : 'request']
-        let triesLeft = 5, retryDelay = 500
-        const run = () => request(url, opts)
-            .then(responseProcessor)
-            .catch(error => {
-                this.events.responseError.emit({
-                    url, opts, authorized,
-                    responseProcessor, error, triesLeft, retryDelay
-                })
-                if(triesLeft-- < 0) throw error
-                return wait(retryDelay *= 2).then(run)
-            })
+        const [url, opts] = requestConstructor(...requestConstructorArgs)
+        const meta = {tries: 0, url, opts, requestConstructorArgs, requestConstructor, authorized}
+        const run = () => {
+            meta.tries++
+            return this.registerRequest(meta).then(() => request(url, opts))
+                .then(responseProcessor)
+                .catch(error => this.registerError(error, meta).then(run))
+        }
         return run()
     }
-
-    processRequestBond = (authorized: boolean, url: URL, opts?: RequestOpts) =>
-        (responseProcessor: ResponseProcessor): Promise<ReturnType<ResponseProcessor>> =>
-            this.processRequest(authorized, url, opts, responseProcessor)
 
     inventory = new Inventory(this)
     webapi = new WebApi(this)
