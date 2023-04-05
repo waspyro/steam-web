@@ -5,9 +5,11 @@ import {wait} from "./utils";
 import {RequestOpts} from "steam-session/dist/extra/types";
 import {getResponseAndDrain, ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
+import WebApi from "./modules/WebApi";
 
 type Props = {
-    profileUrl: ProfileUrlParts
+    profileUrl: ProfileUrlParts,
+    webapi: string
 }
 
 export default class SteamWeb {
@@ -48,13 +50,15 @@ export default class SteamWeb {
     }
 
     processRequestBond = (authorized: boolean, url: URL, opts?: RequestOpts) =>
-        (responseProcessor: ResponseProcessor): ReturnType<ResponseProcessor> =>
+        (responseProcessor: ResponseProcessor): Promise<ReturnType<ResponseProcessor>> =>
             this.processRequest(authorized, url, opts, responseProcessor)
 
     inventory = new Inventory(this)
+    webapi = new WebApi(this)
 
     props: Props = {
-        profileUrl: null
+        profileUrl: null,
+        webapi: null
     }
 
     async updateMyProfileURL() {
