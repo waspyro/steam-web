@@ -6,7 +6,7 @@ import {
     uMarketPriceHistory, uMarketPriceOverview, uMarketRemoveListing, uMarketSearch,
     uMarketSellItem, uMarketSellListings
 } from "../assets/urls";
-import {EMPA, uMake} from "../utils";
+import {_, EMPA, uMake} from "../utils";
 import {ProfileUrlParts} from "../types";
 import {asset} from "./InventoryRequests";
 
@@ -83,14 +83,16 @@ export const removeMarketListing = (sessionid, id) => [
 ]
 
 // market_hash_name = encodeURIComponent(market_hash_name)
-export const itemPriceOverview = ({appid, market_hash_name}, currency, country, referer) => [
-    uMake(uMarketPriceOverview + '/', EMPA, {country, currency, appid, market_hash_name}), {
+export const itemPriceOverview = (
+    {appid, market_hash_name}, currency: number, country: string, referer: ProfileUrlParts
+) => [
+    uMake(uMarketPriceOverview + '/', _, {country, currency, appid, market_hash_name}), {
     headers: {
         'X-Prototype-Version': '1.7',
         'X-Requested-With': 'XMLHttpRequest',
-        Referer: uMake(uCommunity, referer[0], referer[1]).toString()
+        Referer: uMake(uCommunity, [referer[0], referer[1]]).toString()
     }
-}]
+}] as const
 
 export const search = ({
   start = 0, count = 100, sortDir = 'desc',

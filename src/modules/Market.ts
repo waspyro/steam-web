@@ -1,9 +1,14 @@
 import SteamWebModule from "./SteamWebModule";
-import {Item, listingPage, multisellPage} from "../requests/Market";
+import {Item, itemPriceOverview, listingPage, multisellPage} from "../requests/Market";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
+import {ProfileUrlParts} from "../types";
+import {getSuccessfulJsonFromResponse} from "steam-session/dist/utils";
+import xPriceGuessed from "../utils/xPriceGuessed";
+import {MarketItemPriceOverviewResponse, MarketItemPriceOverviewParsed} from "../types/market";
+import {ECurrency, ECurrencyValues} from "../types/enums";
 
 export default class Market extends SteamWebModule {
 
@@ -35,14 +40,21 @@ export default class Market extends SteamWebModule {
         })
     }
 
+    //todo: get defaults from props
+    getItemPriceOverview(
+        item: Item, currency: ECurrencyValues | number = ECurrency['USD'],
+        country = 'US', referer: ProfileUrlParts = this.web.props.profileUrl
+    ) {
+        return this.request(false, itemPriceOverview, item, currency, country, referer)
+        (getSuccessfulJsonFromResponse).then((res: MarketItemPriceOverviewResponse) => {
+            const [lowestPrice, responseCurrency] = xPriceGuessed(res.lowest_price)
+            const [medianPrice] = xPriceGuessed(res.median_price)
+            const volume = res.volume ? Number(res.volume.replaceAll(',', '')) : null
+            return {
+                price: {lowest: lowestPrice, median: medianPrice},
+                currency: responseCurrency, volume
+            } as MarketItemPriceOverviewParsed
+        })
+    }
+
 }
-
-
-function toObject<T extends ReadonlyArray<string>>(array: T): { [K in T[number]]: string } {
-    const object = {} as { [K in T[number]]: string };
-    for (const el of array) object[el] = 'hello';
-    return object;
-}
-
-const res = toObject(['foo', 'baz'] as const);
-res.foo.toString()
