@@ -28,7 +28,11 @@ export default class SteamWeb {
     }
 
     registerRequest = (meta) => Promise.resolve(true)       //there should be global request limiters
-    registerError = (error, meta) => Promise.reject(error)  //there may be some global error handling strategies
+    registerError = (error, meta) => {
+        return Promise.reject(error)
+        // if(meta.tries > 1) return Promise.reject(error)
+        // else return Promise.resolve()
+    }  //there may be some global error handling strategies
 
     processRequest = <ARGS extends Array<any>, Y extends readonly [URL, RequestOpts?]>(
         authorized: boolean,

@@ -1,11 +1,10 @@
 import SteamWebModule from "./SteamWebModule";
 import {Item, itemPriceOverview, listingPage, multisellPage} from "../requests/Market";
-import {getSuccessfullText} from "../utils/responseProcessors";
+import { asSuccessJson, ExpectAndRun, getSuccessfullText, statusOk} from "../utils/responseProcessors";
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
 import {ProfileUrlParts} from "../types";
-import {getSuccessfulJsonFromResponse} from "steam-session/dist/utils";
 import xPriceGuessed from "../utils/xPriceGuessed";
 import {MarketItemPriceOverviewResponse, MarketItemPriceOverviewParsed} from "../types/market";
 import {ECurrency, ECurrencyValues} from "../types/enums";
@@ -46,7 +45,7 @@ export default class Market extends SteamWebModule {
         country = 'US', referer: ProfileUrlParts = this.web.props.profileUrl
     ) {
         return this.request(false, itemPriceOverview, item, currency, country, referer)
-        (getSuccessfulJsonFromResponse).then((res: MarketItemPriceOverviewResponse) => {
+        (ExpectAndRun(statusOk, asSuccessJson, (res: MarketItemPriceOverviewResponse) => {
             const [lowestPrice, responseCurrency] = xPriceGuessed(res.lowest_price)
             const [medianPrice] = xPriceGuessed(res.median_price)
             const volume = res.volume ? Number(res.volume.replaceAll(',', '')) : null
@@ -54,7 +53,7 @@ export default class Market extends SteamWebModule {
                 price: {lowest: lowestPrice, median: medianPrice},
                 currency: responseCurrency, volume
             } as MarketItemPriceOverviewParsed
-        })
+        }))
     }
 
 }
