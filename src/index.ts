@@ -2,9 +2,10 @@ import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
 import {ProfileUrlParts} from "./types";
 import {RequestOpts} from "steam-session/dist/extra/types";
-import {getResponseAndDrain, ResponseProcessor} from "./utils/responseProcessors";
+import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
+import Market from "./modules/Market";
 
 type Props = {
     profileUrl: ProfileUrlParts,
@@ -33,11 +34,11 @@ export default class SteamWeb {
         authorized: boolean,
         requestConstructor: (...args: ARGS) => Y, //the easiest way to identify request for limiter and catcher
         ...requestConstructorArgs: ARGS           //useful for debugging
-    ) => (
+    ) => <T extends any>(
         //by design: this should check that response comes as expected i.e. no timeout and no steam is down
         //but maybe all response should be handled by this...
-        responseProcessor: ResponseProcessor = getResponseAndDrain
-    ): ReturnType<typeof responseProcessor> => {
+        responseProcessor: (response: Response) => T
+    ): T => {
         const request = this.session[authorized ? 'authorizedRequest' : 'request']
         const [url, opts] = requestConstructor(...requestConstructorArgs)
         const meta = {tries: 0, url, opts, requestConstructorArgs, requestConstructor, authorized}
@@ -52,6 +53,7 @@ export default class SteamWeb {
 
     inventory = new Inventory(this)
     webapi = new WebApi(this)
+    market = new Market(this)
 
     props: Props = {
         profileUrl: null,

@@ -61,7 +61,7 @@ export type asset = {
     assetid: string,
     classid: string,
     instanceid: string,
-    amount: string
+    amount?: string
 }
 
 export type AssetsDescriptionsCollection = {

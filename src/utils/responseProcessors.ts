@@ -7,7 +7,7 @@ export const getResponseAndDrain = (res: Response): Response => {
     return res
 }
 
-export const getSuccessfullText = (res: Response): Promise<String> => {
+export const getSuccessfullText = (res: Response): Promise<string> => {
     if(!res.ok) throw new BadHTTPStatusResponseError(res)
     return res.text()
 }
