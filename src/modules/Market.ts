@@ -1,13 +1,22 @@
 import SteamWebModule from "./SteamWebModule";
-import {Item, itemPriceOverview, listingPage, multisellPage} from "../requests/Market";
+import {itemOrdersHistogram, itemPriceOverview, listingPage, multisellPage, priceHistory} from "../requests/marketRequests";
 import { asSuccessJson, ExpectAndRun, getSuccessfullText, statusOk} from "../utils/responseProcessors";
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
 import {ProfileUrlParts} from "../types";
 import xPriceGuessed from "../utils/xPriceGuessed";
-import {MarketItemPriceOverviewResponse, MarketItemPriceOverviewParsed} from "../types/market";
-import {ECurrency, ECurrencyValues} from "../types/enums";
+import {
+    MarketItemPriceOverviewResponse,
+    MarketItemPriceOverviewParsed,
+    MarketItemPriceHistoryResponse,
+    Item,
+    ItemWithNameid,
+    MarketItemOrderHistogramResponse,
+    MarketPriceHistoryResponseNormalized
+} from "../types/marketTypes";
+import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
+import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
 
 export default class Market extends SteamWebModule {
 
@@ -54,6 +63,37 @@ export default class Market extends SteamWebModule {
                 currency: responseCurrency, volume
             } as MarketItemPriceOverviewParsed
         }))
+    }
+
+    getItemPriceHistoryRaw(
+        item: Item, referer: ProfileUrlParts = this.web.props.profileUrl
+    ): Promise<MarketItemPriceHistoryResponse> {
+        return this.request(false, priceHistory, item, referer)
+        (ExpectAndRun(statusOk, asSuccessJson))
+    }
+
+    getItemPriceHistory = (...args: Parameters<Market['getItemPriceHistoryRaw']>) => {
+        return this.getItemPriceHistoryRaw(...args).then(r => {
+            for(const el of r.prices as any) {
+                el[0] = new Date(el[0])
+                el[2] = Number(el[2])
+            }
+            return r as unknown as MarketPriceHistoryResponseNormalized
+        })
+    }
+
+    //TODO: If-Modified-Since header
+    getItemOrdersDetailsRaw(
+        item: ItemWithNameid,
+        currency: ECurrencyValues | number = ECurrency['USD'],
+        country = 'US', language = 'english', // extendTable = true
+    ) {
+        return this.request(false, itemOrdersHistogram, item, currency, country, language)
+        (ExpectAndRun(statusOk, asSuccessJson)) as Promise<MarketItemOrderHistogramResponse>
+    }
+
+    getItemOrdersDetails(...args: Parameters<Market['getItemOrdersDetailsRaw']>) {
+        return this.getItemOrdersDetailsRaw(...args).then(minifyItemOrdersResponse)
     }
 
 }

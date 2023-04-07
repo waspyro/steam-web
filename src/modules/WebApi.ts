@@ -1,7 +1,7 @@
 import SteamWeb from "../index";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseWebApiPage from "../parsers/parseWebApiPage";
-import {apikeyPage, register, revoke} from "../requests/WebApiRequests";
+import {apikeyPage, register, revoke} from "../requests/webApiRequests";
 
 export default class WebApi {
     private readonly request: SteamWeb['processRequest']

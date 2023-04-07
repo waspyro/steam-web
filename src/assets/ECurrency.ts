@@ -1,5 +1,4 @@
 //https://partner.steamgames.com/doc/store/pricing/currencies
-
 export const ECurrency = {
     USD: 1,
     GBP: 2,

@@ -37,7 +37,7 @@ export const successValues = [true, 1] as const
 export const statusOk = [200] as const
 export const asSuccessJson = asJsonWith(successFieldLocation, successValues)
 
-export const ExpectAndRun = (status: readonly number[], processAs, processor) => {
+export const ExpectAndRun = (status: readonly number[], processAs, processor = r => r) => {
     return (response: Response) => {
         if (status.includes(response.status)) return processAs(response, processor)
         throw new UnexpectedHTTPResponseStatus(response, status)

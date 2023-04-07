@@ -1,14 +1,21 @@
 import {
     uCommunity,
     uMarket,
-    uMarketListings, uMarketMultisell,
+    uMarketListings,
+    uMarketMultisell,
     uMarketOrderHistogram,
-    uMarketPriceHistory, uMarketPriceOverview, uMarketRemoveListing, uMarketSearch,
-    uMarketSellItem, uMarketSellListings
+    uMarketPriceHistory,
+    uMarketPriceOverview,
+    uMarketRemoveListing,
+    uMarketSearch,
+    uMarketSellItem,
+    uMarketSellListings
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
 import {ProfileUrlParts} from "../types";
-import {asset} from "./InventoryRequests";
+import {asset} from "./inventoryRequests";
+import {Item, ItemWithNameid} from "../types/marketTypes";
+import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 
 export const listingPage = (item: Item) => [
     uMake(uMarketListings, [item.appid, item.market_hash_name])
@@ -20,9 +27,9 @@ export const marketHomePage = () => [
 
 // market_hash_name = encodeURIComponent(market_hash_name)
 export const priceHistory = (
-    appid: string | number, market_hash_name: string, referer: ProfileUrlParts //todo: different locations?
+    item: Item, referer: ProfileUrlParts //todo: different locations?
 ) => [
-    uMake(uMarketPriceHistory, EMPA, { appid, market_hash_name }), {
+    uMake(uMarketPriceHistory, EMPA, item), {
     headers: {
         'X-Prototype-Version': '1.7',
         'X-Requested-With': 'XMLHttpRequest',
@@ -31,11 +38,13 @@ export const priceHistory = (
         'Sec-Fetch-Mode': 'cors',
         'Referer': uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
     }
-}]
+}] as const
 
 //todo currency country language types
 export const itemOrdersHistogram = (
-    {nameid, appid, market_hash_name}, currency: number = 1, country = 'US', language = 'english'
+    {nameid, appid, market_hash_name}: ItemWithNameid,
+    currency: ECurrencyValues | number = ECurrency['USD'],
+    country = 'US', language = 'english'
 ) => [
     uMake(uMarketOrderHistogram, EMPA, { country, language, currency, item_nameid: nameid, two_factor: 0 }), {
     headers: {
@@ -46,7 +55,7 @@ export const itemOrdersHistogram = (
         'Sec-Fetch-Mode': 'cors',
         'Referer': uMake(uMarket, ['listings', appid, encodeURIComponent(market_hash_name)]).toString()
     }
-}]
+}] as const
 
 export const sellItem = (
     profile, sessionid: string, {appid, contextid, assetid, amount = '1'}: asset, priceCents: number
@@ -107,7 +116,3 @@ export const search = ({
     return [uMake(uMarketSearch, EMPA, qs)]
 }
 
-export type Item = {
-    appid: string,
-    market_hash_name: string
-}
