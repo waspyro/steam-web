@@ -1,3 +1,5 @@
+import {DescriptionsCommon} from "../requests/inventoryRequests";
+
 export type MarketItemPriceOverviewResponse = {
     success: boolean,
     lowest_price?: string,
@@ -63,3 +65,41 @@ export type MarketItemOrdersHistogramMinified = {
     },
     currency: string
 }
+
+export type MarketSearchRequestParams = {
+    start?: number | string,
+    count?: number | string,
+    sortDir?: 'desc' | 'asc', //todo: asc? check
+    sortBy?: 'quantity' //todo: what else?
+    appid?: number | string
+    filters?: [key: string, value: string][]
+}
+
+export type MarketSearchResponse = {
+    success: boolean,
+    start: number,
+    pagesize: number,
+    total_count: number,
+    searchdata: {
+        query: string,
+        search_descrptions: boolean,
+        total_count: number,
+        pagesize: number,
+        prefix: string,
+        class_prefix: string
+    },
+    sale_price_text: string,
+    results: MarketSearchResponseResults
+}
+
+export type MarketSearchResponseResults = {
+    name: string,
+    hash_name: string,
+    sell_listings: number,
+    sell_price: number,
+    sell_price_text: string,
+    app_icon: string,
+    app_name: string,
+    asset_description: DescriptionsCommon,
+    sale_price_text: string
+}[]

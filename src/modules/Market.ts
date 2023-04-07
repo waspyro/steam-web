@@ -1,6 +1,18 @@
 import SteamWebModule from "./SteamWebModule";
-import {itemOrdersHistogram, itemPriceOverview, listingPage, multisellPage, priceHistory} from "../requests/marketRequests";
-import { asSuccessJson, ExpectAndRun, getSuccessfullText, statusOk} from "../utils/responseProcessors";
+import {
+    itemOrdersHistogram,
+    itemPriceOverview,
+    listingPage, marketSearch,
+    multisellPage,
+    priceHistory,
+} from "../requests/marketRequests";
+import {
+    asSuccessJson,
+    asSuccessJsonWith,
+    ExpectAndRun,
+    getSuccessfullText,
+    statusOk
+} from "../utils/responseProcessors";
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
@@ -13,7 +25,7 @@ import {
     Item,
     ItemWithNameid,
     MarketItemOrderHistogramResponse,
-    MarketPriceHistoryResponseNormalized
+    MarketPriceHistoryResponseNormalized, MarketSearchRequestParams, MarketSearchResponseResults
 } from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
@@ -86,7 +98,7 @@ export default class Market extends SteamWebModule {
     getItemOrdersDetailsRaw(
         item: ItemWithNameid,
         currency: ECurrencyValues | number = ECurrency['USD'],
-        country = 'US', language = 'english', // extendTable = true
+        country = 'US', language = 'english'
     ) {
         return this.request(false, itemOrdersHistogram, item, currency, country, language)
         (ExpectAndRun(statusOk, asSuccessJson)) as Promise<MarketItemOrderHistogramResponse>
@@ -94,6 +106,11 @@ export default class Market extends SteamWebModule {
 
     getItemOrdersDetails(...args: Parameters<Market['getItemOrdersDetailsRaw']>) {
         return this.getItemOrdersDetailsRaw(...args).then(minifyItemOrdersResponse)
+    }
+
+    search(params: MarketSearchRequestParams): Promise<MarketSearchResponseResults> {
+        return this.request(false, marketSearch, params)
+        (ExpectAndRun(statusOk, asSuccessJsonWith(['results'])))
     }
 
 }

@@ -36,6 +36,7 @@ export const successFieldLocation = ['success'] as const
 export const successValues = [true, 1] as const
 export const statusOk = [200] as const
 export const asSuccessJson = asJsonWith(successFieldLocation, successValues)
+export const asSuccessJsonWith = asJsonWith.bind(null, successFieldLocation, successValues)
 
 export const ExpectAndRun = (status: readonly number[], processAs, processor = r => r) => {
     return (response: Response) => {

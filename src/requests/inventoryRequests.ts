@@ -40,22 +40,39 @@ export type OpenBoosterPackResponse = {
     }[]
 }
 
-export type descriptionCommon = {
-    appid: number,
-    classid: string,
-    instanceid: string,
-    currency: number,
-    tradable: number | 1 | 0,
-    name: string,
-    market_name: string,
-    market_hash_name: string,
-    commodity: number
-    market_tradable_restriction: number,
-    market_marketable_restriction: number,
-    marketable: number
+//todo: collect samples, check if common response for
+// 1. created market listings
+// 2. inventory
+// 3. market search
+export type DescriptionsCommon = {
+    appid: number,                              //MS
+    classid: string,                            //MS
+    instanceid: string,                         //MS
+    currency: number,                           //MS
+    tradable: number | 1 | 0,                   //MS
+    name: string,                               //MS
+    market_name: string,                        //MS
+    market_hash_name: string,                   //MS
+    commodity: number                           //MS
+    market_tradable_restriction: number,        //MS
+    market_marketable_restriction: number,      //MS
+    marketable: number,                         //MS
+    type: string,                               //MS
+
+    background_color?: string,                  //MS
+    icon_url?: string,                          //MS
+    icon_url_large?: string,                    //MS
+    descriptions?: obj[],                       //MS
 } & obj
 
-export type asset = {
+export type MarketDescription = {
+    market_fee_app?: number,                    //MS-steam
+    owner_actions?: obj[],                      //MS-steam
+    name_color?: string                         //MS-tf MS-cs etc
+} & DescriptionsCommon
+
+
+export type Asset = {
     appid: number,
     contextid?: string,
     assetid: string,
@@ -65,8 +82,8 @@ export type asset = {
 }
 
 export type AssetsDescriptionsCollection = {
-    assets: asset[],
-    descriptions: descriptionCommon[]
+    assets: Asset[],
+    descriptions: DescriptionsCommon[]
 }
 
 export type InventoryItemsResponse = {
@@ -75,8 +92,8 @@ export type InventoryItemsResponse = {
     total_inventory_count: string,
     success: number,
     rwgrsn: number
-    assets: asset[]
-    descriptions: descriptionCommon[]
+    assets: Asset[]
+    descriptions: DescriptionsCommon[]
 }
 
 export const KnownAppids = {

@@ -13,8 +13,8 @@ import {
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
 import {ProfileUrlParts} from "../types";
-import {asset} from "./inventoryRequests";
-import {Item, ItemWithNameid} from "../types/marketTypes";
+import {Asset} from "./inventoryRequests";
+import {Item, ItemWithNameid, MarketSearchRequestParams} from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 
 export const listingPage = (item: Item) => [
@@ -58,7 +58,7 @@ export const itemOrdersHistogram = (
 }] as const
 
 export const sellItem = (
-    profile, sessionid: string, {appid, contextid, assetid, amount = '1'}: asset, priceCents: number
+    profile, sessionid: string, {appid, contextid, assetid, amount = '1'}: Asset, priceCents: number
 ) => [
     new URL(uMarketSellItem), {
         method: 'POST',
@@ -103,16 +103,19 @@ export const itemPriceOverview = (
     }
 }] as const
 
-export const search = ({
+export const marketSearch = ({
   start = 0, count = 100, sortDir = 'desc',
   sortBy = 'quantity', appid = 753, filters = [],
-} = {}) => {
+}: MarketSearchRequestParams) => {
     const qs = {
         query: '', search_descriptions: 0, norender: 1,
         start, count, appid, sort_dir: sortDir, sort_column: sortBy
     }
+
     for(const [key, value] of filters)
         qs[`category_${appid}_${key}[]`] = value
-    return [uMake(uMarketSearch, EMPA, qs)]
-}
 
+    return [
+        uMake(uMarketSearch, EMPA, qs)
+    ] as const
+}

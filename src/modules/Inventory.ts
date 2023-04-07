@@ -1,7 +1,7 @@
 import SteamWeb from "../index";
 import {
-    asset, AssetsDescriptionsCollection,
-    descriptionCommon,
+    Asset, AssetsDescriptionsCollection,
+    DescriptionsCommon,
     InventoryContexts, inventoryItems,
     InventoryItemsResponse, inventoryPage, OpenBoosterPackResponse, unpackBooster
 } from "../requests/inventoryRequests";
@@ -51,8 +51,8 @@ export default class Inventory {
 
     async load(opts: AtLeast<InventoryRequestOpts, 'steamid'>, limit: number = Infinity):
         Promise<AssetsDescriptionsCollection> {
-        const descriptions: descriptionCommon[] = []
-        const assets: asset[] = []
+        const descriptions: DescriptionsCommon[] = []
+        const assets: Asset[] = []
         for await (const resp of this.it(opts, limit)) {
             descriptions.push(...resp.descriptions)
             assets.push(...resp.assets)
