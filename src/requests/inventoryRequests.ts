@@ -45,10 +45,10 @@ export type OpenBoosterPackResponse = {
 // 2. inventory
 // 3. market search
 export type DescriptionsCommon = {
-    appid: number,                              //MS
+    appid: number,                              //MS ML
     classid: string,                            //MS
     instanceid: string,                         //MS
-    currency: number,                           //MS
+    currency: number,                           //MS ML
     tradable: number | 1 | 0,                   //MS
     name: string,                               //MS
     market_name: string,                        //MS
@@ -69,6 +69,7 @@ export type MarketDescription = {
     market_fee_app?: number,                    //MS-steam
     owner_actions?: obj[],                      //MS-steam
     name_color?: string                         //MS-tf MS-cs etc
+    contextid: string                           //ML
 } & DescriptionsCommon
 
 

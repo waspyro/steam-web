@@ -12,9 +12,9 @@ export async function *StartCountIt<
     if(!opts.start) opts.start = 0
     while(limit > 0) {
         if((limit -= opts.count) < 0) opts.count += limit
-        const results = await executor(opts)
-        if(!results.length) break
-        yield results
+        const results = await executor(opts) || []
+        yield results //it's ok to return empty array i guess
+        if(results.length < opts.count) break
         opts.start += opts.count
     }
 }

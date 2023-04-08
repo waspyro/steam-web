@@ -12,9 +12,9 @@ import {
     uMarketSellListings
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
-import {ProfileUrlParts} from "../types";
+import {ProfileUrlParts, Numberable} from "../types";
 import {Asset} from "./inventoryRequests";
-import {Item, ItemWithNameid, MarketSearchRequestParams} from "../types/marketTypes";
+import {Item, ItemWithNameid, MarketAsset, MarketSearchRequestParams, StartCountAble} from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 
 export const listingPage = (item: Item) => [
@@ -58,22 +58,25 @@ export const itemOrdersHistogram = (
 }] as const
 
 export const sellItem = (
-    profile, sessionid: string, {appid, contextid, assetid, amount = '1'}: Asset, priceCents: number
+    profile: ProfileUrlParts,
+    sessionid: string,
+    {appid, contextid, assetid, amount = '1'}: MarketAsset,
+    priceCents: Numberable
 ) => [
     new URL(uMarketSellItem), {
-        method: 'POST',
-        body: new URLSearchParams({
-            appid: String(appid), contextid, assetid,
-            amount, price: String(priceCents), sessionid
-        }),
-        headers: {
-            Referer: uMake(uCommunity, [profile[0], profile[1], 'inventory']).toString()
-        }
-    }]
+    method: 'POST',
+    body: new URLSearchParams({
+        appid: appid, contextid, assetid,
+        amount, price: priceCents, sessionid
+    } as any),
+    headers: {
+        Referer: uMake(uCommunity, [profile[0], profile[1], 'inventory']).toString()
+    }}
+] as const
 
-export const mySellListings = (start, count) => [
-    uMake(uMarketSellListings, EMPA, {start, count})
-]
+export const mySellListings = (params: StartCountAble) => [
+    uMake(uMarketSellListings, EMPA, params)
+] as const
 
 export const multisellPage = (appid: string | number, contextid: string | number, items: readonly string[]) => {
     return [
@@ -89,7 +92,7 @@ export const removeMarketListing = (sessionid, id) => [
         Referer: uMarket,
         Origin: uCommunity
     }}
-]
+] as const
 
 // market_hash_name = encodeURIComponent(market_hash_name)
 export const itemPriceOverview = (

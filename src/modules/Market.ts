@@ -3,8 +3,8 @@ import {
     itemOrdersHistogram,
     itemPriceOverview,
     listingPage, marketSearch,
-    multisellPage,
-    priceHistory,
+    multisellPage, mySellListings,
+    priceHistory, removeMarketListing, sellItem,
 } from "../requests/marketRequests";
 import {
     asSuccessJson,
@@ -16,7 +16,7 @@ import {
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
-import {ProfileUrlParts} from "../types";
+import {Numberable, ProfileUrlParts} from "../types";
 import xPriceGuessed from "../utils/xPriceGuessed";
 import {
     MarketItemPriceOverviewResponse,
@@ -25,10 +25,17 @@ import {
     Item,
     ItemWithNameid,
     MarketItemOrderHistogramResponse,
-    MarketPriceHistoryResponseNormalized, MarketSearchRequestParams, MarketSearchResponseResults
+    MarketPriceHistoryResponseNormalized,
+    MarketSearchRequestParams,
+    MarketSearchResponseResults,
+    StartCountAble,
+    MySellListingsResponse, MySellListingsResponseParsed, MarketAsset, MarketItemSellResponse, MarketSellListingParsed
 } from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
+import {defaultify} from "../utils";
+import parseMarketSellListings from "../parsers/parseMarketSellListings";
+import {needsProp} from "../utils/decorators";
 
 export default class Market extends SteamWebModule {
 
@@ -113,7 +120,56 @@ export default class Market extends SteamWebModule {
         (ExpectAndRun(statusOk, asSuccessJsonWith(['results'])))
     }
 
+    @needsProp('profile')
+    sellItem(item: MarketAsset, priceCentsAfterCommission: Numberable): Promise<MarketItemSellResponse> {
+        const profile = this.web.props.profileUrl
+        const sessionid = this.web.session.sessionid
+        return this.request(true, sellItem, profile, sessionid, item, priceCentsAfterCommission)
+        (ExpectAndRun(statusOk, asSuccessJson, (res:MarketItemSellResponse) => {
+            if(res.needs_email_confirmation)
+                this.web.events.emailConfirmationRequired.emit(['market', item, res.email_domain])
+            if(res.needs_mobile_confirmation)
+                this.web.events.mobileConfirmationRequired.emit(['market', item])
+            return res
+        }))
+    }
 
+    async removeSellListing(id: string | {id: string}) {
+        id = typeof id === 'string' ? id : id.id
+        return this.request(true, removeMarketListing, this.web.session.sessionid, id)
+        ((res: Response) => res.json().then(body => {
+            if(res.status === 200) return true
+            throw new ErrorWithContext('unable to remove listing', {
+                status: res.status,
+                body: body
+            })
+        }))
+    }
 
+    getMySellListings(params: StartCountAble): Promise<MySellListingsResponseParsed> {
+        return this.request(true, mySellListings, defaultify(startCountBase, params))
+        (ExpectAndRun(statusOk, asSuccessJson, (res: MySellListingsResponse) => {
+            return ({
+                total: res.total_count,
+                active: res.num_active_listings,
+                start: res.start,
+                descriptions: res.assets,
+                listings: parseMarketSellListings(res.results_html, res.assets)
+            })
+        }))
+    }
+
+    async replaceListing(listing: MarketSellListingParsed, newPriceCentsAfterComission: Numberable) {
+        await this.removeSellListing(listing)
+        const {appid, amount, unowned_contextid, unowned_id} = listing.asset
+        const item = {appid: appid, amount: amount, contextid: unowned_contextid, assetid: unowned_id}
+        return this.sellItem(item, newPriceCentsAfterComission)
+    }
+
+    // cancelSellListing
 
 }
+
+const startCountBase = {start: 0, count: 100}
+
+

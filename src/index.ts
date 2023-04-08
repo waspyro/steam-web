@@ -24,7 +24,16 @@ export default class SteamWeb {
             error: any,
             triesLeft: number,
             retryDelay: number
-        }>()
+        }>(),
+        mobileConfirmationRequired: new Listenable<[
+            from: 'market' | 'trade',
+            item?: any
+        ]>(),
+        emailConfirmationRequired: new Listenable<[
+            from: 'market' | 'trade',
+            item?: any,
+            emailTip?: string,
+        ]>()
     }
 
     registerRequest = (meta) => Promise.resolve(true)       //there should be global request limiters

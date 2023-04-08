@@ -1,4 +1,6 @@
 import {DescriptionsCommon} from "../requests/inventoryRequests";
+import parseMarketSellListings from "../parsers/parseMarketSellListings";
+import {Numberable} from "./index";
 
 export type MarketItemPriceOverviewResponse = {
     success: boolean,
@@ -103,3 +105,82 @@ export type MarketSearchResponseResults = {
     asset_description: DescriptionsCommon,
     sale_price_text: string
 }[]
+
+export type StartCountAble = {
+    start?: number,
+    count?: number
+}
+
+export type MarketSellListingParsed = {
+    asset: MySellListingsAssetDescriptions,
+    price: number | null,
+    currency: string | null,
+    date: Date,
+    id: string
+}
+
+export type MySellListingsResponseParsed = {
+    total: MySellListingsResponse["total_count"],
+    active: MySellListingsResponse["num_active_listings"],
+    start: MySellListingsResponse["start"],
+    descriptions: MySellListingsResponse["assets"],
+    listings: MarketSellListingParsed[]
+}
+
+export type MySellListingsResponse = {
+    "success": boolean,
+    "pagesize": number,
+    "total_count": number,
+    "start": number,
+    "num_active_listings": number,
+    "hovers": string,
+    "results_html": string,
+    "assets": {
+        [appid: string]: {
+        [contextid: string]: {
+        [id: string]: MySellListingsAssetDescriptions } }
+    }
+}
+
+export type MySellListingsAssetDescriptions = {
+    currency: number
+    appid: number
+    contextid: string
+    id: string
+    classid: string
+    instanceid: string
+    amount: string
+    status: number
+    original_amount: string
+    unowned_id: string
+    unowned_contextid: string
+    background_color: string
+    icon_url: string
+    icon_url_large: string,
+    name: string
+    type: string
+    market_name: string
+    market_hash_name: string
+    market_fee_app?: number
+    commodity: number
+    market_tradable_restriction: number
+    market_marketable_restriction: number
+    marketable: number
+    app_icon: string
+    owner: number
+}
+
+export type MarketAsset = {
+    appid: Numberable,
+    contextid: Numberable,
+    assetid: Numberable,
+    amount: Numberable
+}
+
+export type MarketItemSellResponse = {
+    "success": boolean,
+    "requires_confirmation": number | 1,
+    "needs_mobile_confirmation": boolean,
+    "needs_email_confirmation": boolean,
+    "email_domain": string
+}
