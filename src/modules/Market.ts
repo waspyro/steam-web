@@ -108,9 +108,12 @@ export default class Market extends SteamWebModule {
         return this.getItemOrdersDetailsRaw(...args).then(minifyItemOrdersResponse)
     }
 
-    search(params: MarketSearchRequestParams): Promise<MarketSearchResponseResults> {
+    search = (params: MarketSearchRequestParams): Promise<MarketSearchResponseResults> => {
         return this.request(false, marketSearch, params)
         (ExpectAndRun(statusOk, asSuccessJsonWith(['results'])))
     }
+
+
+
 
 }
