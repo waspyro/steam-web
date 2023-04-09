@@ -10,6 +10,17 @@ export const uApiKey = uDev + '/apikey'
 export const uApiKeyRegister = uDev + '/registerkey'
 export const uApiKeyRevoke = uDev + '/revokekey'
 
+export const uApiEconService = uApi + '/IEconService'
+export const uApiEconCancelTradeV1 = uApiEconService + '/CancelTradeOffer/v1'
+export const uApiEconDeclineTradeV1 = uApiEconService + '/DeclineTradeOffer/v1'
+export const uApiEconGetTradesV1 = uApiEconService + '/GetTradeOffers/v1'
+export const uApiEconGetTradeV1 = uApiEconService + '/GetTradeOffer/v1'
+export const uApiEconGetTradeSummaryV1 = uApiEconService + '/GetTradeOffersSummary/v1'
+
+export const uTradeoffer = uCommunity + '/tradeoffer'
+export const uTradeofferNew = uTradeoffer + '/new'
+export const uTradeofferNewSend = uTradeofferNew + '/send'
+
 export const uMarket = uCommunity + '/market'
 export const uMarketListings = uMarket + '/listings'
 export const uMarketSellItem = uMarket + '/sellitem'

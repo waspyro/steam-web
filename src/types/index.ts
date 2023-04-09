@@ -23,6 +23,8 @@ export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
 
 export type ProfileUrlParts = [type: 'profiles' | 'id' | string, id: string, full?: string]
 
-export type RequestConstructor = (...args: any[]) => [URL, RequestOpts?]
+export type RequestConstructor = (...args: any[]) => readonly [URL, RequestOpts?]
 
 export type Numberable = string | number
+
+export type BoolNum = 1 | 0

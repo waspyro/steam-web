@@ -57,9 +57,11 @@ export default class SteamWeb {
         const meta = {tries: 0, url, opts, requestConstructorArgs, requestConstructor, authorized}
         const run = () => {
             meta.tries++
-            return this.registerRequest(meta).then(() => request(url, opts))
+            return this.registerRequest(meta)
+                .then(() => request(url, opts))
                 .then(responseProcessor)
-                .catch(error => this.registerError(error, meta).then(run))
+                .catch(error => this.registerError(error, meta)
+                    .then(run))
         }
         return run()
     }
