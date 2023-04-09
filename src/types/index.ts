@@ -25,6 +25,8 @@ export type ProfileUrlParts = [type: 'profiles' | 'id' | string, id: string, ful
 
 export type RequestConstructor = (...args: any[]) => readonly [URL, RequestOpts?]
 
+export type RequestConstructorReturns = readonly [URL, RequestOpts?]
+
 export type Numberable = string | number
 
 export type BoolNum = 1 | 0
