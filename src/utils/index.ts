@@ -1,4 +1,5 @@
 import {obj} from "steam-session/dist/extra/types";
+import {TradeofferAsset, TradeofferAssetRawMinimal} from "../types/tradeOfferTypes";
 
 export const EMPA = []
 export const EMPO = {}
@@ -37,3 +38,12 @@ export const defaultify = <T extends obj, Y extends obj>(defaultsObject: T, obje
 export const wait = (time: number) => new Promise(r => setTimeout(r, time))
 
 export const isDigitString = (str: string) => /^\d+$/.test(str)
+
+export const normalizeTradeofferAssets = (
+    assets: TradeofferAssetRawMinimal[]
+): TradeofferAsset[] => assets.map(({appid, contextid, amount, assetid}) => ({
+    appid: Number(appid),
+    contextid: String(contextid),
+    amount: Number(amount),
+    assetid: String(assetid)
+}))

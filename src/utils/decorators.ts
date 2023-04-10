@@ -5,7 +5,7 @@ interface SteamWebModule {
     web: SteamWeb
 }
 
-type KnownProps = 'steamid' | 'profile'
+type KnownProps = 'steamid' | 'profile' | 'webapi'
 const propRoute = (instance: SteamWebModule, prop: KnownProps) => {
     switch (prop) {
         case 'profile': return {
@@ -15,6 +15,10 @@ const propRoute = (instance: SteamWebModule, prop: KnownProps) => {
         case 'steamid': return {
             get: () => instance.web.session.steamid,
             update: instance.web.session.updateRefreshToken.bind(instance.web.session)
+        }
+        case 'webapi': return {
+            get: () => instance.web.props.webapi,
+            update: () => instance.web.webapi.getOrSet('localhost') //temp todo
         }
         default: return {
             get: () => {throw new Error()},

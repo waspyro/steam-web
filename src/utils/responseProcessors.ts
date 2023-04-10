@@ -17,6 +17,11 @@ export const getSuccessfullText = (res: Response): Promise<string> => {
 export const asText = (response: Response, cb: (input: string) => any) => response.text().then(cb)
 export const asIt = (response: Response, cb: (input: Response) => any) => cb(response)
 export const asJson = (response: Response, cb: (input: any) => any) => response.json().then(cb)
+export const asJsonWithField = (field: string) => (response: Response, cb: (input: any) => any) =>
+    response.json().then(json => {
+        if(json[field]) return json[field]
+        else throw new ErrorWithContext('response missing field ' + field, json)
+    })
 export const asJsonWith = (fieldPath: readonly string[] = EMPA, status: readonly any[] = EMPA, andNonEmpty: readonly any[] = EMPA) => {
     return (response: Response, cb: (input: any) => any) => response.json().then(json => {
         let expected = json

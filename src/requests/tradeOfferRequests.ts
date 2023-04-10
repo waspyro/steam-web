@@ -1,4 +1,4 @@
-import {_, EMPA, U, uMake} from "../utils";
+import {_, EMPA, uMake} from "../utils";
 import {
     uApiEconDeclineTradeV1, uApiEconGetTradeSummaryV1,
     uApiEconGetTradesV1,
@@ -6,36 +6,44 @@ import {
     uApiEconService, uCommunity, uTradeofferNew, uTradeofferNewSend,
     uTradeoffer
 } from "../assets/urls";
-import {BoolNum, ProfileUrlParts, RequestConstructor, RequestConstructorReturns} from "../types";
+import {BoolNum, Numberable, ProfileUrlParts, RequestConstructor, RequestConstructorReturns} from "../types";
+import {RequestOpts} from "steam-session/dist/extra/types";
 
 const tradeofferPageUrl = (partner, token) => uMake(uTradeofferNew,_, {partner, token})
 
-export const acceptTradeOffer= (
+const noCookies: RequestOpts = {
+    cookiesSet: 'manual',
+    cookiesSave: 'manual'
+}
+
+export const acceptTradeOffer = (
     sessionid: string, tradeofferid: string, partnerSteamID64: string,
-    serverid: string, captcha: string
+    serverid: Numberable, captcha: string
 ) => [
     uMake(uTradeoffer, [tradeofferid, 'accept']), {
     method: 'POST',
-    body: new URLSearchParams({sessionid, serverid, tradeofferid, partner: partnerSteamID64, captcha}),
+    body: new URLSearchParams({sessionid, serverid, tradeofferid, partner: partnerSteamID64, captcha} as any),
     headers: {
         'Referer': uMake(uTradeoffer, [tradeofferid]).toString()
     }
 }] as RequestConstructorReturns
 
-export const cancelTradeOffer: RequestConstructor = (webapikey: string, tradeofferid: string) => [
+export const cancelTradeOffer = (webapikey: string, tradeofferid: string) => [
     new URL(uApiEconService), {
     method: 'POST',
-    body: new URLSearchParams({key: webapikey, tradeofferid})
+    body: new URLSearchParams({key: webapikey, tradeofferid}),
+    ...noCookies
 }] as RequestConstructorReturns
 
-export const declineTradeOffer: RequestConstructor = (webapikey: string, tradeofferid: string) => [
+export const declineTradeOffer = (webapikey: string, tradeofferid: string) => [
     new URL(uApiEconDeclineTradeV1), {
     method: 'POST',
-    body: new URLSearchParams({key: webapikey, tradeofferid})
+    body: new URLSearchParams({key: webapikey, tradeofferid}),
+    ...noCookies
 }] as RequestConstructorReturns
 
-export const getTradeOffers: RequestConstructor = (webapi: string, {
-    sent = 1, received = 1, descriptions = 1, onlyActive = 1, language = 'en', time
+export const getTradeOffers = (webapi: string, {
+    sent = 1, received = 1, descriptions = 1, onlyActive = 1, language = 'en', time = undefined
 }) => [
     uMake(uApiEconGetTradesV1,_, {
         get_descriptions: descriptions,
@@ -45,18 +53,21 @@ export const getTradeOffers: RequestConstructor = (webapi: string, {
         key: webapi,
         time_historical_cutoff: time, //todo: format
         language,
-    })
-] as RequestConstructorReturns
+    }), {
+    ...noCookies
+}] as RequestConstructorReturns
 
-export const getTradeOffer: RequestConstructor = (webapikey: string, tradeofferid: string, descriptions: BoolNum) => [
-    uMake(uApiEconGetTradeV1,_, {key: webapikey, tradeofferid, get_descriptions: descriptions})
-] as RequestConstructorReturns
+export const getTradeOffer = (webapikey: string, tradeofferid: string, descriptions: BoolNum, language = 'en') => [
+    uMake(uApiEconGetTradeV1,_, {key: webapikey, tradeofferid, get_descriptions: descriptions, language}), {
+    ...noCookies
+}] as RequestConstructorReturns
 
-export const getTradeOffersSummary: RequestConstructor = (webapikey: string, timeLastVisitSec: number) => [
-    uMake(uApiEconGetTradeSummaryV1,_, {key: webapikey, time_last_visit: timeLastVisitSec})
-] as const
+export const getTradeOffersSummary = (webapikey: string, timeLastVisitSec?: number) => [
+    uMake(uApiEconGetTradeSummaryV1,_, {key: webapikey, time_last_visit: timeLastVisitSec}), {
+    ...noCookies
+}] as const
 
-export const sendTradeOffer: RequestConstructor = (
+export const sendTradeOffer = (
     sessionid: string,
     partnerSid64: string,
     partnerAccountID: string,
@@ -72,7 +83,7 @@ export const sendTradeOffer: RequestConstructor = (
     body: new URLSearchParams({
         json_tradeoffer: JSON.stringify({
             newversion: true,
-            version: 2,
+            version: 11,
             me: {
                 assets: myItems,
                 currency: EMPA,
@@ -91,7 +102,7 @@ export const sendTradeOffer: RequestConstructor = (
         sessionid,
         partner: partnerSid64,
         captcha
-    })
+    } as any)
 }] as RequestConstructorReturns
 
 export const tradeofferPrivacyPage: RequestConstructor = (profile: ProfileUrlParts) => [
