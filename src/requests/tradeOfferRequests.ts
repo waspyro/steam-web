@@ -6,7 +6,7 @@ import {
     uApiEconService, uCommunity, uTradeofferNew, uTradeofferNewSend,
     uTradeoffer
 } from "../assets/urls";
-import {BoolNum, Numberable, ProfileUrlParts, RequestConstructor, RequestConstructorReturns} from "../types";
+import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
 import {RequestOpts} from "steam-session/dist/extra/types";
 
 const tradeofferPageUrl = (partner, token) => uMake(uTradeofferNew,_, {partner, token})
@@ -105,10 +105,10 @@ export const sendTradeOffer = (
     } as any)
 }] as RequestConstructorReturns
 
-export const tradeofferPrivacyPage: RequestConstructor = (profile: ProfileUrlParts) => [
+export const tradeofferPrivacyPage = (profile: ProfileUrlParts) => [
     uMake(uCommunity, [profile[0], profile[1], 'tradeoffers', 'privacy'])
 ] as RequestConstructorReturns
 
-const tradeofferPage = (accountid: string, token: string) => [
+export const tradeofferPage = (accountid: string, token: string) => [
     tradeofferPageUrl(accountid, token)
 ] as RequestConstructorReturns

@@ -4,9 +4,9 @@ import {
     cancelTradeOffer,
     getTradeOffer,
     getTradeOffers,
-    getTradeOffersSummary, sendTradeOffer
+    getTradeOffersSummary, sendTradeOffer, tradeofferPage, tradeofferPrivacyPage
 } from "../requests/tradeOfferRequests";
-import {asJson, asJsonWithField, asSuccessJson, ExpectAndRun, statusOk} from "../utils/responseProcessors";
+import {asJson, asJsonWithField, asSuccessJson, asText, ExpectAndRun, statusOk} from "../utils/responseProcessors";
 import {needsProp} from "../utils/decorators";
 import {
     CEconTradeOffer,
@@ -19,6 +19,7 @@ import {ErrorWithContext} from "../utils/errors";
 import SteamID from "steamid";
 import {EMPA, normalizeTradeofferAssets} from "../utils";
 import {MalformedResponse} from "steam-session/dist/Errors";
+import parseTradeofferPage from "../parsers/parseTradeofferPage";
 export class Trade extends SteamWebModule {
 
     acceptTradeOffer(tradeofferid: string, partnerSteamID: string) {
@@ -84,6 +85,22 @@ export class Trade extends SteamWebModule {
                 this.web.events.emailConfirmationRequired.emit(['trade', resp.tradeofferid, resp.email_domain])
             return resp
         }))
+    }
+
+    @needsProp('profile')
+    getAccountTradeOfferToken(): Promise<string> {
+        return this.request(true, tradeofferPrivacyPage, this.web.props.profileUrl)
+        (ExpectAndRun(statusOk, asText, html => {
+            const match = html.match(/id="trade_offer_access_url" value="(.+)"/)
+            if(!match) throw new Error('Unable to find url with token on the page')
+            const url = match[1]
+            return url.split('token=')[1]
+        }))
+    }
+
+    checkTradeofferPartnerDetails(accountid: string, token?: string) {
+        this.request(true, tradeofferPage, accountid, token)
+        (ExpectAndRun(statusOk, asText, parseTradeofferPage))
     }
 
 }
