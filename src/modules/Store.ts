@@ -1,12 +1,19 @@
 import SteamWebModule from "./SteamWebModule";
 import {Numberable} from "../types";
-import {appDetails, bundlePage, packageDetails} from "../requests/storeRequests";
-import {asJson, ExpectAndRun, statusOk} from "../utils/responseProcessors";
+import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/storeRequests";
+import {
+    asJson,
+    asJsonWith,
+    asSuccessJson,
+    asSuccessJsonWith,
+    ExpectAndRun,
+    statusOk
+} from "../utils/responseProcessors";
 import {
     AppDetails,
     AppDetailsFilters,
     AppDetailsPriceOverviewResponse,
-    PackageDetails
+    PackageDetails, StoreSearchParams, StoreSearchResponse
 } from "../types/storeTypes";
 import {MalformedResponse} from "steam-session/dist/Errors";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
@@ -14,6 +21,7 @@ import {ECounty} from "../assets/ECurrency";
 import parseStoreBundlePage, {BundleDetailsParsed} from "../parsers/parseStoreBundlePage";
 import SteamWeb from "../index";
 import {uStore} from "../assets/urls";
+import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
 
 export default class Store extends SteamWebModule {
 
@@ -60,7 +68,13 @@ export default class Store extends SteamWebModule {
         }))
     }
 
-    search() {}
+    search(params: StoreSearchParams): Promise<StoreSearchResponse & {results: ParsedStoreSearchResponse}> {
+        return this.request(false, storeSearch, params)
+        (ExpectAndRun(statusOk, asSuccessJson, (json: any) => { //StoreSearchResponse
+            json.results = parseStoreSearchResponse(json.results_html);
+            return json
+        }))
+    }
 
     //todo .createCart, or external manager?
     addItemToCart() {}

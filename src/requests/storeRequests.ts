@@ -19,7 +19,6 @@ export const bundlePage = (bundleid: Numberable) => [
     {followRedirects: 0}
 ] as RequestConstructorReturns
 
-//todo: store search
-export const search = (searchParams: StoreSearchParams) => [
+export const storeSearch = (searchParams: StoreSearchParams) => [
     uMake(uStoreSearch, _, searchParams)
 ] as RequestConstructorReturns

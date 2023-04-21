@@ -1,27 +1,40 @@
 import {BoolNum} from "./index";
 import {obj} from "steam-session/dist/extra/types";
 
-export type StoreSearchParams = Partial<{
+export type StoreSearchParamsOptional = {
+    term?: string,
+    sort_by?: 'Released_DESC' | 'Name_ASC' | 'Price_ASC' | 'Price_DESC' | 'Reviews_DESC' | string,
+    'as-reviews-score'?: `${string}-${string}`,
+    maxprice?: number | 'free',
+    specials?: BoolNum,
+    tags?: number[],
+    category1?: number[],
+    category2?: number[],
+    category3?: number[],
+    vrsupport?: number[],
+    os?: string,
+    supportedlang?: string[],
+    'as-hide'?: 'cart' | 'ea' | 'mixed' | 'negative',
+}
+
+export type StoreSearchParamsRequired = {
+    ignore_preferences: BoolNum,
+    infinite: BoolNum,
+    force_infinite: BoolNum,
+    dynamic_data: BoolNum,
+    query: '',
     start: number,
     count: number,
-    term: string,
-    sort_by: 'Released_DESC' | 'Name_ASC' | 'Price_ASC' | 'Price_DESC' | 'Reviews_DESC' | string,
-    'as-reviews-score': `${string}-${string}`,
-    maxprice: number | 'free',
-    specials: BoolNum,
-    tags: number[],
-    category1: number[],
-    category2: number[],
-    category3: number[],
-    vrsupport: number[],
-    os: string,
-    supportedlang: string[],
-    'as-hide': 'cart' | 'ea' | 'mixed' | 'negative',
-    ignore_preferences: BoolNum,
-    infinite: any,
-    force_infinite: any,
-    dynamic_data: any
-}>
+}
+
+export type StoreSearchResponse = {
+    success: BoolNum
+    total_count: number
+    start: number
+    results_html: string
+}
+
+export type StoreSearchParams = StoreSearchParamsRequired & StoreSearchParamsOptional
 
 type PackageGroup = {
     name: 'default' | string,
@@ -144,3 +157,5 @@ export type PackageDetailsResponse = {
         data?: PackageDetails
     }
 }
+
+const fun = <T extends boolean>(arg: T = true) => arg
