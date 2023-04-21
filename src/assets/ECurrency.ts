@@ -51,3 +51,17 @@ export const ECurrency = {
 
 export type ECurrencyKeys = keyof typeof ECurrency
 export type ECurrencyValues = typeof ECurrency[ECurrencyKeys]
+
+//cut from ECurrency, maybe it is possible extract it with some
+//generic type but i don't know how
+export type ECounty =
+"US"|  "GB"|  "EU"|  "CH"|  "RU"|
+"PL"|  "BR"|  "JP"|  "NO"|  "ID"|
+"MY"|  "PH"|  "SG"|  "TH"|  "VN"|
+"KR"|  "TR"|  "UA"|  "MX"|  "CA"|
+"AU"|  "NZ"|  "CN"|  "IN"|  "CL"|
+"PE"|  "CO"|  "ZA"|  "HK"|  "TW"|
+"SA"|  "AE"|  "SE"|  "AR"|  "IL"|
+"BY"|  "KZ"|  "KW"|  "QA"|  "CR"|
+"UY"|  "BG"|  "HR"|  "CZ"|  "DK"|
+"HU"|  "RO"| string

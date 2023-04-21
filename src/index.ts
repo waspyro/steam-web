@@ -7,6 +7,7 @@ import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
 import Market from "./modules/Market";
 import {Trade} from "./modules/Trade";
+import Store from "./modules/Store";
 
 type Props = {
     profileUrl: ProfileUrlParts,
@@ -14,7 +15,10 @@ type Props = {
 }
 
 export default class SteamWeb {
-    constructor(public readonly session: SteamSession = new SteamSession()) {}
+    readonly #forceAuthorized = null
+    constructor(public readonly session: SteamSession = new SteamSession(), {forceAuthorized = true} = {}) {
+        this.#forceAuthorized = forceAuthorized
+    }
 
     events = {
         responseError: new Listenable<{ //temporary
@@ -51,7 +55,7 @@ export default class SteamWeb {
     ) => <T extends any>(
         responseProcessor: (response: Response) => T
     ): T => {
-        const request = this.session[authorized ? 'authorizedRequest' : 'request']
+        const request = this.session[(this.#forceAuthorized || authorized) ? 'authorizedRequest' : 'request']
         const [url, opts] = requestConstructor(...requestConstructorArgs)
         const meta = {tries: 0, url, opts, requestConstructorArgs, requestConstructor, authorized}
         const run = () => {
@@ -69,6 +73,7 @@ export default class SteamWeb {
     webapi = new WebApi(this)
     market = new Market(this)
     trade = new Trade(this)
+    store = new Store(this)
 
     props: Props = {
         profileUrl: null,

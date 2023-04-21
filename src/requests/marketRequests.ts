@@ -13,7 +13,6 @@ import {
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
 import {ProfileUrlParts, Numberable} from "../types";
-import {Asset} from "./inventoryRequests";
 import {Item, ItemWithNameid, MarketAsset, MarketSearchRequestParams, StartCountAble} from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 
@@ -25,7 +24,6 @@ export const marketHomePage = () => [
     new URL(uMarket)
 ]
 
-// market_hash_name = encodeURIComponent(market_hash_name)
 export const priceHistory = (
     item: Item, referer: ProfileUrlParts //todo: different locations?
 ) => [
