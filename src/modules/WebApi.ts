@@ -1,4 +1,4 @@
-import SteamWeb from "../index";
+import SteamWeb from "../SteamWeb";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseWebApiPage from "../parsers/parseWebApiPage";
 import {apikeyPage, register, revoke} from "../requests/webApiRequests";

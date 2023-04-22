@@ -19,7 +19,7 @@ import {MalformedResponse} from "steam-session/dist/Errors";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
 import {ECounty} from "../assets/ECurrency";
 import parseStoreBundlePage, {BundleDetailsParsed} from "../parsers/parseStoreBundlePage";
-import SteamWeb from "../index";
+import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
 

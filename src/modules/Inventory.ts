@@ -1,4 +1,4 @@
-import SteamWeb from "../index";
+import SteamWeb from "../SteamWeb";
 import {
     Asset, AssetsDescriptionsCollection,
     DescriptionsCommon,

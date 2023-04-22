@@ -1,4 +1,4 @@
-import SteamWeb from "../index";
+import SteamWeb from "../SteamWeb";
 
 export default abstract class SteamWebModule {
     protected readonly request: SteamWeb['processRequest']

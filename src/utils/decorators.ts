@@ -1,4 +1,4 @@
-import SteamWeb from "../index";
+import SteamWeb from "../SteamWeb";
 import {wait} from "./index";
 
 interface SteamWebModule {
