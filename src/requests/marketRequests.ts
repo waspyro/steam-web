@@ -76,7 +76,7 @@ export const mySellListings = (params: StartCountAble) => [
     uMake(uMarketSellListings, EMPA, params)
 ] as RequestConstructorReturns
 
-export const multisellPage = (appid: string | number, contextid: string | number, items: readonly string[]) => [
+export const multisellPage = (appid: Numberable, contextid: Numberable, items: readonly string[]) => [
     uMake(uMarketMultisell, EMPA, {appid, contextid}, items.map(el => ({items: el, qty: 1})), 'brackets')
 ] as RequestConstructorReturns
 

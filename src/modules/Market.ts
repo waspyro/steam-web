@@ -45,9 +45,9 @@ export default class Market extends SteamWebModule {
         (getSuccessfullText).then(parseNameidFromLisngPage)
     }
 
-    getItemsNameIDs<T extends ReadonlyArray<string>>(
-        appid: string, contextid: string, hashnames: T
-    ): Promise<{ [K in T[number]]: string }>  {
+    getItemsNameIDs = <T extends ReadonlyArray<string>> (
+        appid: Numberable, contextid: Numberable, hashnames: T
+    ): Promise<{ [K in T[number]]: string }> => {
         return this.request(true, multisellPage, appid, contextid, hashnames)
         (getSuccessfullText).then(html => {
             const [nameids, parsedHashNames] = parseNameidFromMultisellPage(html)
@@ -55,7 +55,7 @@ export default class Market extends SteamWebModule {
 
             const results = {}
             for(let i = 0; i < parsedHashNames.length; i++)
-                results[nameids[i]] = nameids[i]
+                results[parsedHashNames[i]] = nameids[i]
 
             const namesMissing = []
             for(const name of hashnames)
