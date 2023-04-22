@@ -157,5 +157,3 @@ export type PackageDetailsResponse = {
         data?: PackageDetails
     }
 }
-
-const fun = <T extends boolean>(arg: T = true) => arg
