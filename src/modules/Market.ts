@@ -2,13 +2,13 @@ import SteamWebModule from "./SteamWebModule";
 import {
     itemOrdersHistogram,
     itemPriceOverview,
-    listingPage, marketSearch,
+    listingPage, marketHomePage, marketSearch,
     multisellPage, mySellListings,
     priceHistory, removeMarketListing, sellItem,
 } from "../requests/marketRequests";
 import {
     asSuccessJson,
-    asSuccessJsonWith,
+    asSuccessJsonWith, asText,
     ExpectAndRun,
     getSuccessfullText,
     statusOk
@@ -36,6 +36,7 @@ import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
 import {defaultify} from "../utils";
 import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {needsProp} from "../utils/decorators";
+import parseMarketStatus, {MarketStatus} from "../parsers/parseMarketStatus";
 
 export default class Market extends SteamWebModule {
 
@@ -167,6 +168,11 @@ export default class Market extends SteamWebModule {
     }
 
     // cancelSellListing
+
+    checkMarketStatus(): Promise<MarketStatus> {
+        return this.request(true, marketHomePage)
+        (ExpectAndRun(statusOk, asText, parseMarketStatus))
+    }
 
 }
 

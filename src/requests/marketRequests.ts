@@ -12,17 +12,17 @@ import {
     uMarketSellListings
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
-import {ProfileUrlParts, Numberable} from "../types";
+import {ProfileUrlParts, Numberable, RequestConstructorReturns} from "../types";
 import {Item, ItemWithNameid, MarketAsset, MarketSearchRequestParams, StartCountAble} from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 
 export const listingPage = (item: Item) => [
     uMake(uMarketListings, [item.appid, item.market_hash_name])
-] as const
+] as RequestConstructorReturns
 
 export const marketHomePage = () => [
     new URL(uMarket)
-]
+] as RequestConstructorReturns
 
 export const priceHistory = (
     item: Item, referer: ProfileUrlParts //todo: different locations?
@@ -36,7 +36,7 @@ export const priceHistory = (
         'Sec-Fetch-Mode': 'cors',
         'Referer': uMake(uCommunity, [referer[0], referer[1], 'inventory']).toString()
     }
-}] as const
+}] as RequestConstructorReturns
 
 //todo currency country language types
 export const itemOrdersHistogram = (
@@ -53,7 +53,7 @@ export const itemOrdersHistogram = (
         'Sec-Fetch-Mode': 'cors',
         'Referer': uMake(uMarket, ['listings', appid, encodeURIComponent(market_hash_name)]).toString()
     }
-}] as const
+}] as RequestConstructorReturns
 
 export const sellItem = (
     profile: ProfileUrlParts,
@@ -70,17 +70,15 @@ export const sellItem = (
     headers: {
         Referer: uMake(uCommunity, [profile[0], profile[1], 'inventory']).toString()
     }}
-] as const
+] as RequestConstructorReturns
 
 export const mySellListings = (params: StartCountAble) => [
     uMake(uMarketSellListings, EMPA, params)
-] as const
+] as RequestConstructorReturns
 
-export const multisellPage = (appid: string | number, contextid: string | number, items: readonly string[]) => {
-    return [
-        uMake(uMarketMultisell, EMPA, {appid, contextid}, items.map(el => ({items: el, qty: 1})), 'brackets')
-    ] as const
-}
+export const multisellPage = (appid: string | number, contextid: string | number, items: readonly string[]) => [
+    uMake(uMarketMultisell, EMPA, {appid, contextid}, items.map(el => ({items: el, qty: 1})), 'brackets')
+] as RequestConstructorReturns
 
 export const removeMarketListing = (sessionid, id) => [
     uMake(uMarketRemoveListing, [id]), {
@@ -90,7 +88,7 @@ export const removeMarketListing = (sessionid, id) => [
         Referer: uMarket,
         Origin: uCommunity
     }}
-] as const
+] as RequestConstructorReturns
 
 // market_hash_name = encodeURIComponent(market_hash_name)
 export const itemPriceOverview = (
@@ -102,7 +100,7 @@ export const itemPriceOverview = (
         'X-Requested-With': 'XMLHttpRequest',
         Referer: uMake(uCommunity, [referer[0], referer[1]]).toString()
     }
-}] as const
+}] as RequestConstructorReturns
 
 export const marketSearch = ({
   start = 0, count = 100, sortDir = 'desc',
@@ -118,5 +116,5 @@ export const marketSearch = ({
 
     return [
         uMake(uMarketSearch, EMPA, qs)
-    ] as const
+    ] as RequestConstructorReturns
 }
