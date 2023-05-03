@@ -6,11 +6,11 @@ import {
     InventoryItemsResponse, inventoryPage, OpenBoosterPackResponse, unpackBooster
 } from "../requests/inventoryRequests";
 import {defaultify} from "../utils";
-import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/utils";
 import {AtLeast, InventoryRequestOpts, ProfileUrlParts, WholeInventoryOpts} from "../types";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseInventoryContexts from "../parsers/parseInventoryContexts";
 import {needsProp} from "../utils/decorators";
+import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/common/utils";
 
 export default class Inventory {
     private readonly request: SteamWeb['processRequest']

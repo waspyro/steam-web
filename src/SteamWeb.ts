@@ -1,13 +1,13 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
 import {ProfileUrlParts, RequestConstructor} from "./types";
-import {RequestOpts} from "steam-session/dist/extra/types";
 import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
 import Market from "./modules/Market";
 import {Trade} from "./modules/Trade";
 import Store from "./modules/Store";
+import {RequestOpts} from "steam-session/dist/common/types";
 
 type Props = {
     profileUrl: ProfileUrlParts,
@@ -54,7 +54,7 @@ export default class SteamWeb {
         requestConstructor: RC,
         ...requestConstructorArgs: Parameters<RC>
     ) => <T extends any>(
-        responseProcessor: (response: Response) => T
+        responseProcessor: (response: Awaited<ReturnType<SteamSession['request']>>) => T
     ): T => {
         const request = this.session[(this.#forceAuthorized || authorized) ? 'authorizedRequest' : 'request']
         const [url, opts] = requestConstructor(...requestConstructorArgs)

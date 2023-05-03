@@ -3,9 +3,7 @@ import {Numberable} from "../types";
 import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/storeRequests";
 import {
     asJson,
-    asJsonWith,
     asSuccessJson,
-    asSuccessJsonWith,
     ExpectAndRun,
     statusOk
 } from "../utils/responseProcessors";
@@ -15,13 +13,13 @@ import {
     AppDetailsPriceOverviewResponse,
     PackageDetails, StoreSearchParams, StoreSearchResponse
 } from "../types/storeTypes";
-import {MalformedResponse} from "steam-session/dist/Errors";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
 import {ECounty} from "../assets/ECurrency";
 import parseStoreBundlePage, {BundleDetailsParsed} from "../parsers/parseStoreBundlePage";
 import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
+import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 
 export default class Store extends SteamWebModule {
 

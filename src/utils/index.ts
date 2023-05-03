@@ -1,5 +1,5 @@
-import {obj} from "steam-session/dist/extra/types";
 import {TradeofferAsset, TradeofferAssetRawMinimal} from "../types/tradeOfferTypes";
+import {obj} from "steam-session/dist/common/types";
 
 export const EMPA = []
 export const EMPO = {}

@@ -1,7 +1,7 @@
 import {uCommunity, uInventory} from "../assets/urls";
 import {uMake} from "../utils";
-import {obj} from "steam-session/dist/extra/types";
 import {InventoryRequestOpts, ProfileUrlParts, RequestConstructor} from "../types";
+import {obj} from "steam-session/dist/common/types";
 
 export const inventoryItems = (
     {steamid, appid, contextid, count, startAssetid: start_assetid, language: l, referer}: InventoryRequestOpts

@@ -1,10 +1,11 @@
+import {SessionHTTPResponse} from "../types";
 
 export class ErrorWithContext extends Error {
     constructor(message, public context: any) {super(message)}
 }
 
 export class UnexpectedHTTPResponseStatus extends Error {
-    constructor(public response: Response, public expected: readonly number[]) {
+    constructor(public response: SessionHTTPResponse, public expected: readonly number[]) {
         super(`Unexpected HTTP response status code: ${response.status} (${response.statusText}).\nExpected: ${expected.join(' ')}`);
     }
 }

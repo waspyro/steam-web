@@ -18,8 +18,8 @@ import {BoolNum} from "../types";
 import {ErrorWithContext} from "../utils/errors";
 import SteamID from "steamid";
 import {EMPA, normalizeTradeofferAssets} from "../utils";
-import {MalformedResponse} from "steam-session/dist/Errors";
 import parseTradeofferPage from "../parsers/parseTradeofferPage";
+import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 export class Trade extends SteamWebModule {
 
     acceptTradeOffer(tradeofferid: string, partnerSteamID: string) {

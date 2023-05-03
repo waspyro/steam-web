@@ -1,29 +1,30 @@
-import {BadHTTPStatusResponseError} from "steam-session/dist/Errors";
 import {BadJSONStatus, ErrorWithContext, UnexpectedHTTPResponseStatus} from "./errors";
 import {EMPA} from "./index";
+import {BadHTTPStatusResponseError} from "steam-session/dist/constructs/Errors";
+import {SessionHTTPResponse} from "../types";
 
-export type ResponseProcessor<T extends any = any> = (res: Response) => T
+export type ResponseProcessor<T extends any = any> = (res: SessionHTTPResponse) => T
 
-export const getResponseAndDrain = (res: Response): Response => {
+export const getResponseAndDrain = (res: SessionHTTPResponse): SessionHTTPResponse => {
     res.text().then()
     return res
 }
 
-export const getSuccessfullText = (res: Response): Promise<string> => {
+export const getSuccessfullText = (res: SessionHTTPResponse): Promise<string> => {
     if(!res.ok) throw new BadHTTPStatusResponseError(res)
     return res.text()
 }
 
-export const asText = (response: Response, cb: (input: string) => any) => response.text().then(cb)
-export const asIt = (response: Response, cb: (input: Response) => any) => cb(response)
-export const asJson = (response: Response, cb: (input: any) => any) => response.json().then(cb)
-export const asJsonWithField = (field: string) => (response: Response, cb: (input: any) => any) =>
+export const asText = (response: SessionHTTPResponse, cb: (input: string) => any) => response.text().then(cb)
+export const asIt = (response: SessionHTTPResponse, cb: (input: SessionHTTPResponse) => any) => cb(response)
+export const asJson = (response: SessionHTTPResponse, cb: (input: any) => any) => response.json().then(cb)
+export const asJsonWithField = (field: string) => (response: SessionHTTPResponse, cb: (input: any) => any) =>
     response.json().then(json => {
         if(json[field]) return json[field]
         else throw new ErrorWithContext('response missing field ' + field, json)
     })
 export const asJsonWith = (fieldPath: readonly string[] = EMPA, status: readonly any[] = EMPA, andNonEmpty: readonly any[] = EMPA) => {
-    return (response: Response, cb: (input: any) => any) => response.json().then(json => {
+    return (response: SessionHTTPResponse, cb: (input: any) => any) => response.json().then(json => {
         let expected = json
         for(const el of fieldPath) expected = expected[el] //todo: throw missing key
         if(status.includes(expected)) {
@@ -44,7 +45,7 @@ export const asSuccessJson = asJsonWith(successFieldLocation, successValues)
 export const asSuccessJsonWith = asJsonWith.bind(null, successFieldLocation, successValues)
 
 export const ExpectAndRun = (status: readonly number[], processAs, processor = r => r) => {
-    return (response: Response) => {
+    return (response: SessionHTTPResponse) => {
         if (status.includes(response.status)) return processAs(response, processor)
         throw new UnexpectedHTTPResponseStatus(response, status)
     }

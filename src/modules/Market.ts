@@ -16,7 +16,7 @@ import {
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
-import {Numberable, ProfileUrlParts} from "../types";
+import {Numberable, ProfileUrlParts, SessionHTTPResponse} from "../types";
 import xPriceGuessed from "../utils/xPriceGuessed";
 import {
     MarketItemPriceOverviewResponse,
@@ -138,7 +138,7 @@ export default class Market extends SteamWebModule {
     async removeSellListing(id: string | {id: string}) {
         id = typeof id === 'string' ? id : id.id
         return this.request(true, removeMarketListing, this.web.session.sessionid, id)
-        ((res: Response) => res.json().then(body => {
+        ((res: SessionHTTPResponse) => res.json().then(body => {
             if(res.status === 200) return true
             throw new ErrorWithContext('unable to remove listing', {
                 status: res.status,

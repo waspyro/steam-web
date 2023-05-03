@@ -1,4 +1,5 @@
-import {RequestOpts} from "steam-session/dist/extra/types";
+import SteamSession from "steam-session";
+import {RequestOpts} from "steam-session/dist/common/types";
 
 export type InventoryRequestOpts = {
     steamid: string,
@@ -30,3 +31,5 @@ export type RequestConstructorReturns = readonly [URL, RequestOpts?]
 export type Numberable = string | number
 
 export type BoolNum = 1 | 0
+
+export type SessionHTTPResponse = Awaited<ReturnType<SteamSession['request']>>

@@ -1,5 +1,4 @@
 import {DescriptionsCommon} from "../requests/inventoryRequests";
-import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {Numberable} from "./index";
 
 export type MarketItemPriceOverviewResponse = {

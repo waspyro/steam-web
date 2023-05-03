@@ -1,4 +1,4 @@
-import {obj} from "steam-session/dist/extra/types";
+import {obj} from "steam-session/dist/common/types";
 
 export type AcceptTradeOfferResponse = {
     tradeid: string

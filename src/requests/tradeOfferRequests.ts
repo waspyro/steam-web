@@ -7,7 +7,7 @@ import {
     uTradeoffer
 } from "../assets/urls";
 import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
-import {RequestOpts} from "steam-session/dist/extra/types";
+import {RequestOpts} from "steam-session/dist/common/types";
 
 const tradeofferPageUrl = (partner, token) => uMake(uTradeofferNew,_, {partner, token})
 
