@@ -17,6 +17,13 @@ export const uApiEconGetTradesV1 = uApiEconService + '/GetTradeOffers/v1'
 export const uApiEconGetTradeV1 = uApiEconService + '/GetTradeOffer/v1'
 export const uApiEconGetTradeSummaryV1 = uApiEconService + '/GetTradeOffersSummary/v1'
 
+export const uApiPlayer = uApi + '/IPlayerService'
+export const uApiPlayerGetRecentlyPlayedGamesV1 = uApiPlayer + '/GetRecentlyPlayedGames/v1'
+export const uApiPlayerGetOwnedGamesV1 = uApiPlayer + '/GetOwnedGames/v1'
+export const uApiPlayerGetSteamLevelV1 = uApiPlayer + '/GetSteamLevel/v1'
+export const uApiPlayerGetBadgesV1 = uApiPlayer + '/GetBadges/v1'
+export const uApiPlayerGetCommunityBadgeProgressV1 = uApiPlayer + '/GetCommunityBadgeProgress/v1'
+
 export const uTradeoffer = uCommunity + '/tradeoffer'
 export const uTradeofferNew = uTradeoffer + '/new'
 export const uTradeofferNewSend = uTradeofferNew + '/send'
@@ -43,3 +50,4 @@ export const uStoreCheckout = uStore + '/checkout'
 export const uCartCheckoutGetFinalPrice = uStoreCheckout + '/getfinalprice'
 export const uCartCheckoutInitTransaction = uStoreCheckout + '/inittransaction'
 export const uCartCheckoutFinalizeTransaction = uStoreCheckout + '/finalizetransaction'
+

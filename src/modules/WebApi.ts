@@ -38,7 +38,7 @@ export default class WebApi {
         })
     }
 
-    getOrSet(domain: string, reRegisterOnDomainMismatch = false) {
+    update(domain: string = 'localhost', reRegisterOnDomainMismatch = false) {
         return this.check().then(key => {
             if(key.status === 'canRegister') return this.register(domain)
             if(reRegisterOnDomainMismatch && key.domain !== domain)

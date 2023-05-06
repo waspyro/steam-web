@@ -18,7 +18,7 @@ const propRoute = (instance: SteamWebModule, prop: KnownProps) => {
         }
         case 'webapi': return {
             get: () => instance.web.props.webapi,
-            update: () => instance.web.webapi.getOrSet('localhost') //temp todo
+            update: () => instance.web.webapi.update('localhost') //temp todo
         }
         default: return {
             get: () => {throw new Error()},

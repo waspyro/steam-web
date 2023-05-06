@@ -8,6 +8,7 @@ import Market from "./modules/Market";
 import {Trade} from "./modules/Trade";
 import Store from "./modules/Store";
 import {RequestOpts} from "steam-session/dist/common/types";
+import Profile from "./modules/Profile";
 
 type Props = {
     profileUrl: ProfileUrlParts,
@@ -16,7 +17,7 @@ type Props = {
 
 export default class SteamWeb {
     readonly #forceAuthorized = null
-    constructor(public readonly session: SteamSession = new SteamSession(), {forceAuthorized = true} = {}) {
+    constructor(public readonly session: SteamSession = new SteamSession({}), {forceAuthorized = true} = {}) {
         this.#forceAuthorized = forceAuthorized
         this.#setDefaultCookies()
     }
@@ -75,6 +76,7 @@ export default class SteamWeb {
     market = new Market(this)
     trade = new Trade(this)
     store = new Store(this)
+    profile = new Profile(this)
 
     props: Props = {
         profileUrl: null,

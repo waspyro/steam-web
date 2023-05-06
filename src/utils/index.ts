@@ -1,5 +1,6 @@
 import {TradeofferAsset, TradeofferAssetRawMinimal} from "../types/tradeOfferTypes";
 import {obj} from "steam-session/dist/common/types";
+import {RequestConstructorReturns} from "../types";
 
 export const EMPA = []
 export const EMPO = {}
@@ -47,3 +48,8 @@ export const normalizeTradeofferAssets = (
     amount: Number(amount),
     assetid: String(assetid)
 }))
+
+export const WebApiGetRequestConstructor = <T extends any>(url: string) => (key: string, params: T) => [
+    uMake(url, _, {key, format: 'json', input_json: JSON.stringify(params)}),
+    {cookiesSet: 'manual', cookiesSave: 'manual'}
+] as RequestConstructorReturns
