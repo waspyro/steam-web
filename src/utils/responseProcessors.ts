@@ -18,9 +18,9 @@ export const getSuccessfullText = (res: SessionHTTPResponse): Promise<string> =>
 export const asText = (response: SessionHTTPResponse, cb: (input: string) => any) => response.text().then(cb)
 export const asIt = (response: SessionHTTPResponse, cb: (input: SessionHTTPResponse) => any) => cb(response)
 export const asJson = (response: SessionHTTPResponse, cb: (input: any) => any) => response.json().then(cb)
-export const asJsonWithField = (field: string) => (response: SessionHTTPResponse, cb: (input: any) => any) =>
+export const asJsonWithField = (field: string) => (response: SessionHTTPResponse, cb: (input: any) => any = v => v) =>
     response.json().then(json => {
-        if(json[field]) return json[field]
+        if(json[field]) return cb(json[field])
         else throw new ErrorWithContext('response missing field ' + field, json)
     })
 export const asJsonWith = (fieldPath: readonly string[] = EMPA, status: readonly any[] = EMPA, andNonEmpty: readonly any[] = EMPA) => {

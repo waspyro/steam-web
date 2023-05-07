@@ -1,12 +1,13 @@
-import {WebApiGetRequestConstructor} from "../utils";
+import {_, uMake, WebApiGetRequestConstructor} from "../utils";
 import {
     uApiPlayerGetBadgesV1, uApiPlayerGetCommunityBadgeProgressV1,
     uApiPlayerGetOwnedGamesV1,
     uApiPlayerGetRecentlyPlayedGamesV1,
-    uApiPlayerGetSteamLevelV1,
+    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1,
 } from "../assets/urls";
-import {BoolNum, Numberable} from "../types";
+import {BoolNum, Numberable, RequestConstructorReturns} from "../types";
 
+export type ResolveVanityURLRequest = {vanityurl: string}
 export type SteamIDParam = { steamid?: string } //todo: required but partial for constructor
 export type GetRecentlyPlayedGames = SteamIDParam & { count?: Numberable }
 export type GetCommunityBadgeProgress = SteamIDParam & { badgeid: number }
@@ -28,3 +29,7 @@ export const getOwnedGames =
     WebApiGetRequestConstructor<GetOwnedGames>(uApiPlayerGetOwnedGamesV1)
 export const getSteamLevel =
     WebApiGetRequestConstructor<GetSteamLevel>(uApiPlayerGetSteamLevelV1)
+export const resolveVanityURL = (webapi: string, vanityurl: string) => [
+    uMake(uApiUserResolveVanityURLV1, _, {key: webapi, vanityurl}),
+    {cookiesSet: 'manual', cookiesSave: 'manual'}
+] as RequestConstructorReturns

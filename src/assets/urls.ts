@@ -17,6 +17,9 @@ export const uApiEconGetTradesV1 = uApiEconService + '/GetTradeOffers/v1'
 export const uApiEconGetTradeV1 = uApiEconService + '/GetTradeOffer/v1'
 export const uApiEconGetTradeSummaryV1 = uApiEconService + '/GetTradeOffersSummary/v1'
 
+export const uApiUser = uApi + '/ISteamUser'
+export const uApiUserResolveVanityURLV1 = uApiUser + '/ResolveVanityURL/v0001'
+
 export const uApiPlayer = uApi + '/IPlayerService'
 export const uApiPlayerGetRecentlyPlayedGamesV1 = uApiPlayer + '/GetRecentlyPlayedGames/v1'
 export const uApiPlayerGetOwnedGamesV1 = uApiPlayer + '/GetOwnedGames/v1'

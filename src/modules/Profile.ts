@@ -5,15 +5,17 @@ import {
     getCommunityBadgeProgress, GetOwnedGames,
     getOwnedGames, GetRecentlyPlayedGames,
     getRecentlyPlayedGames, GetSteamLevel,
-    getSteamLevel, SteamIDParam
+    getSteamLevel, resolveVanityURL, SteamIDParam
 } from "../requests/profileRequests";
-import {asJsonWithField, ExpectAndRun, statusOk} from "../utils/responseProcessors";
+import {asJsonWith, asJsonWithField, ExpectAndRun, statusOk} from "../utils/responseProcessors";
 import {
     GetBadgesResponse,
     GetCommunityBadgeProgressResponse,
     GetOwnedGamesResponse,
     GetRecentlyPlayedGamesResponse
 } from "../types/profileTypes";
+import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+import {ErrorWithContext} from "../utils/errors";
 
 export default class Profile extends SteamWebModule {
 
@@ -28,6 +30,17 @@ export default class Profile extends SteamWebModule {
         }
         return this.request(false, constructor, webapi, params)
         (ExpectAndRun(statusOk, asJsonWithField('response')))
+    }
+
+    resolveVanityURL(profileid: string) {
+        const webapi = this.web.props.webapi
+        if(!webapi) throw new Error('missing "webapi" prop')
+        return this.request(false, resolveVanityURL, webapi, profileid)
+        (ExpectAndRun(statusOk, asJsonWithField('response'), r => {
+            if(r.steamid) return r.steamid
+            if(r.message) throw new ErrorWithContext('Error: ' + r.message, r)
+            else throw new MalformedResponse(r, 'message')
+        }))
     }
 
     getOwnedGames = this.WebApiProfileRequest<GetOwnedGames, GetOwnedGamesResponse>
