@@ -1,21 +1,30 @@
 import SteamWebModule from "./SteamWebModule";
 import {
+    editProfileDetails,
     GetBadges,
     getBadges, GetCommunityBadgeProgress,
-    getCommunityBadgeProgress, GetOwnedGames,
+    getCommunityBadgeProgress, getGameAvatars, GetOwnedGames,
     getOwnedGames, GetRecentlyPlayedGames,
     getRecentlyPlayedGames, GetSteamLevel,
-    getSteamLevel, resolveVanityURL, SteamIDParam
+    getSteamLevel, ProfileDetailsSettings, profilePage, resolveVanityURL, selectGameAvatar, SteamIDParam
 } from "../requests/profileRequests";
-import {asJsonWith, asJsonWithField, ExpectAndRun, statusOk} from "../utils/responseProcessors";
+import {
+    asJsonWithField,
+    ExpectAndRun,
+    getSuccessfullText,
+    statusOk
+} from "../utils/responseProcessors";
 import {
     GetBadgesResponse,
-    GetCommunityBadgeProgressResponse,
+    GetCommunityBadgeProgressResponse, GetGameAvatarsResponse,
     GetOwnedGamesResponse,
-    GetRecentlyPlayedGamesResponse
+    GetRecentlyPlayedGamesResponse, ProfileDetails
 } from "../types/profileTypes";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 import {ErrorWithContext} from "../utils/errors";
+import ParseProfileDetails from "../parsers/parseProfileDetails";
+import {getSuccessfulResponseJson} from "steam-session/dist/common/utils";
+import {needsProp} from "../utils/decorators";
 
 export default class Profile extends SteamWebModule {
 
@@ -30,6 +39,35 @@ export default class Profile extends SteamWebModule {
         }
         return this.request(false, constructor, webapi, params)
         (ExpectAndRun(statusOk, asJsonWithField('response')))
+    }
+
+    setPrivacy() {}
+
+    getGameAvatars(): Promise<GetGameAvatarsResponse> {
+        return this.request(true, getGameAvatars)(getSuccessfulResponseJson)
+    }
+
+    selectGameAvatar(appid: number, avatarid: number): Promise<true> {
+        return this.request(true, selectGameAvatar, this.web.session.sessionid, appid, avatarid)
+        (r => getSuccessfulResponseJson(r).then(r => {
+            if(r.success !== 1) throw new ErrorWithContext('something went wrong', r)
+            return true
+        }))
+    }
+
+    @needsProp('profile')
+    editProfileDetails(details: ProfileDetailsSettings): Promise<true> {
+        return this.request(true, editProfileDetails, this.web.props.profileUrl, {
+            sessionID: this.web.session.sessionid, ...details
+        })(r => getSuccessfulResponseJson(r).then(r => {
+            if(r.success !== 1) throw new ErrorWithContext('something wen wrong', r)
+            return true
+        }))
+    }
+
+    getProfileDetails(profile: [type: string, id: string, ...rest: any]): Promise<ProfileDetails> {
+        return this.request(false, profilePage, profile[0], profile[1])
+        (r => getSuccessfullText(r).then(ParseProfileDetails))
     }
 
     resolveVanityURL(profileid: string) {

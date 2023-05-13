@@ -1,11 +1,13 @@
-import {_, uMake, WebApiGetRequestConstructor} from "../utils";
+import {_, defaultify, uMake, WebApiGetRequestConstructor} from "../utils";
 import {
     uApiPlayerGetBadgesV1, uApiPlayerGetCommunityBadgeProgressV1,
     uApiPlayerGetOwnedGamesV1,
     uApiPlayerGetRecentlyPlayedGamesV1,
-    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1,
+    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity,
 } from "../assets/urls";
-import {BoolNum, Numberable, RequestConstructorReturns} from "../types";
+import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
+import {formDataFromObject} from "steam-session/dist/common/utils";
+import defaultProfileDetails from "../assets/defaultProfileDetails";
 
 export type ResolveVanityURLRequest = {vanityurl: string}
 export type SteamIDParam = { steamid?: string } //todo: required but partial for constructor
@@ -18,6 +20,12 @@ export type GetOwnedGames = SteamIDParam & {
     include_played_free_games?: BoolNum,
     appids_filter?: number[]
 }
+
+export type ProfileDetailsSettings = Partial<{
+    personaName: string, real_name: string,
+    customURL: string, country: string, state: string,
+    city: number | string, summary: string, hide_profile_awards: BoolNum
+}>
 
 export const getBadges =
     WebApiGetRequestConstructor<GetBadges>(uApiPlayerGetBadgesV1)
@@ -33,3 +41,23 @@ export const resolveVanityURL = (webapi: string, vanityurl: string) => [
     uMake(uApiUserResolveVanityURLV1, _, {key: webapi, vanityurl}),
     {cookiesSet: 'manual', cookiesSave: 'manual'}
 ] as RequestConstructorReturns
+
+export const profilePage = (type, id) => [
+    uMake(uCommunity, [type, id])
+] as RequestConstructorReturns
+
+export const getGameAvatars = () => [
+    uMake(uCommunity, ['actions', 'GameAvatars'], {json: 1, l: 'english'})
+] as RequestConstructorReturns
+
+export const selectGameAvatar = (sessionid: string, appid: number, selectedAvatar: number) => [
+    uMake(uCommunity, ['ogg', appid, 'selectAvatar']), {
+    method: 'POST',
+    body: formDataFromObject({sessionid, json: '1', selectedAvatar: selectedAvatar.toString()})
+}] as RequestConstructorReturns
+
+export const editProfileDetails = (profile: ProfileUrlParts, details: ProfileDetailsSettings & {sessionID: string}) => [
+    uMake(uCommunity, [profile[0], profile[1], 'edit/']), {
+    method: 'POST',
+    body: formDataFromObject(defaultify(defaultProfileDetails, details))
+}] as RequestConstructorReturns

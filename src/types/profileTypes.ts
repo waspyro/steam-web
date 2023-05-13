@@ -1,4 +1,5 @@
 import {obj} from "steam-session/dist/common/types";
+import {BoolNum} from "./index";
 
 export type GetOwnedGamesResponse = {
     response: {
@@ -59,4 +60,50 @@ export type GetRecentlyPlayedGamesResponse = {
             playtime_linux_forever: number
         }[]
     }
+}
+
+
+//that's too much to check for
+// export type PrivateProfileDetails = {new: true, private: false} | {new: false, private: true}
+
+export type ProfileDetails = {
+    new: boolean,
+    private: boolean,
+    name?: string | null,
+    realName?: string | null,
+    location?: string | null,
+    summary?: string | null,
+    topComments?: {authorName: string, authorLink: string, timestamp: string, text: string}[],
+    //todo
+    commentsTotalPages?: number,
+    level?: number,
+    recentlyPlayedGames?: any[],
+    groupsTotal?: number,
+    topGroups?: any[],
+    gamesTotal?: number,
+    screenshotsTotal?: number,
+    reviewsTotal?: number,
+    showcases?: any[]
+}
+
+type AvatarsCollection = {
+    appid: number,
+    name: string,
+    avatar_count: number,
+    avatars: {
+        ordinal: number,
+        avatar_hash: string
+    }[]
+}
+
+export type GetGameAvatarsResponse = {
+    baseAvaLink: string,
+    rgRecentGames: AvatarsCollection[],
+    rgOwnedGames: AvatarsCollection[],
+    rgOtherGames: AvatarsCollection[],
+}
+
+export type SelectGameAvatarJSONResponse = {
+    success: number,
+    message: string
 }
