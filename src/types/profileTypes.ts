@@ -74,6 +74,9 @@ export type ProfileDetails = {
     location?: string | null,
     summary?: string | null,
     topComments?: {authorName: string, authorLink: string, timestamp: string, text: string}[],
+    avatarSrc?: string | null,
+    status?: 'online' | 'in-game' | 'offline' | string | null
+    statusDetails?: string
     //todo
     commentsTotalPages?: number,
     level?: number,

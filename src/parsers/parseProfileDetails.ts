@@ -8,6 +8,10 @@ export default (html: string): ProfileDetails => {
         profileDetails.new = true
         return profileDetails
     }
+    profileDetails.avatarSrc = $('div.playerAvatar > div > img')?.attr('src') || null
+    const classesString = $('.profile_in_game.persona').attr('class') || ''
+    profileDetails.status = classesString.replace('profile_in_game persona', '').trim()
+    profileDetails.statusDetails = $('.profile_in_game_name').text().trim()
     const privateInfo = $('.profile_private_info')
     if(privateInfo.length) {
         const text = privateInfo.text()
