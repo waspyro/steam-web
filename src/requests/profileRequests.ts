@@ -1,9 +1,9 @@
-import {_, defaultify, uMake, WebApiGetRequestConstructor} from "../utils";
+import {_, defaultify, U, uMake, WebApiGetRequestConstructor} from "../utils";
 import {
     uApiPlayerGetBadgesV1, uApiPlayerGetCommunityBadgeProgressV1,
     uApiPlayerGetOwnedGamesV1,
     uApiPlayerGetRecentlyPlayedGamesV1,
-    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity,
+    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity, uHelpEN, uStore, uStoreAccount,
 } from "../assets/urls";
 import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
 import {formDataFromObject} from "steam-session/dist/common/utils";
@@ -61,3 +61,11 @@ export const editProfileDetails = (profile: ProfileUrlParts, details: ProfileDet
     method: 'POST',
     body: formDataFromObject(defaultify(defaultProfileDetails, details))
 }] as RequestConstructorReturns
+
+export const accountDetailsPage = () => [
+    new URL(uStoreAccount)
+] as RequestConstructorReturns
+
+export const accountHelpPage = () => [
+    new URL(uHelpEN)
+] as RequestConstructorReturns

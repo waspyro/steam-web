@@ -1,5 +1,6 @@
 import SteamWebModule from "./SteamWebModule";
 import {
+    accountDetailsPage, accountHelpPage,
     editProfileDetails,
     GetBadges,
     getBadges, GetCommunityBadgeProgress,
@@ -15,6 +16,7 @@ import {
     statusOk
 } from "../utils/responseProcessors";
 import {
+    AccountDetails, AccountSupportPageDetails,
     GetBadgesResponse,
     GetCommunityBadgeProgressResponse, GetGameAvatarsResponse,
     GetOwnedGamesResponse,
@@ -25,6 +27,8 @@ import {ErrorWithContext} from "../utils/errors";
 import ParseProfileDetails from "../parsers/parseProfileDetails";
 import {getSuccessfulResponseJson} from "steam-session/dist/common/utils";
 import {needsProp} from "../utils/decorators";
+import {load} from "cheerio";
+import xPriceGuessed from "../utils/xPriceGuessed";
 
 export default class Profile extends SteamWebModule {
 
@@ -78,6 +82,37 @@ export default class Profile extends SteamWebModule {
             if(r.steamid) return r.steamid
             if(r.message) throw new ErrorWithContext('Error: ' + r.message, r)
             else throw new MalformedResponse(r, 'message')
+        }))
+    }
+
+    async getAccountDetails(): Promise<AccountDetails> {
+        return this.request(true, accountDetailsPage)(r => getSuccessfullText(r).then(t => {
+            const $ = load(t)
+            const [balance, currency] = xPriceGuessed($('.accountRow > .price').text())
+            const [country, email, emailStatus, SteamGuardStatus] = $('.account_setting_sub_block .account_data_field')
+                .toArray().map(e => $(e).text())
+            return { balance, currency, country, email, emailStatus, guardStatus: SteamGuardStatus.trim() }
+        }))
+    }
+
+    async getAccountSupportDetails(): Promise<AccountSupportPageDetails> {
+        return this.request(true, accountHelpPage)(r => getSuccessfullText(r).then(t => {
+            const $ = load(t)
+            let needToSpendMoreToActivateAccount = 0
+            const needToSpendPopupText = $('.help_event_limiteduser_spend > span').text()
+            if(needToSpendPopupText) {
+                const matched = needToSpendPopupText.match(/([\d.]+).*?([\d.]+)/)
+                needToSpendMoreToActivateAccount = Number(matched[2]) - Number(matched[1])
+            }
+
+            let supportMessages = []
+            const supportMessagesEls = $('.support_message_ctn').toArray()
+            if(supportMessages.length) supportMessages = supportMessagesEls.map(el => $(el).text()
+                .replaceAll('\t', '')
+                .split('\n')
+                .filter(el => el !== ''))
+
+            return {needToSpendMoreToActivateAccount, supportMessages}
         }))
     }
 

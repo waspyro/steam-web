@@ -1,6 +1,9 @@
 export const uCommunity = 'https://steamcommunity.com'
 export const uStore = 'https://store.steampowered.com'
 export const uApi = 'https://api.steampowered.com'
+export const uHelp = 'https://help.steampowered.com'
+
+export const uHelpEN = uHelp + '/en'
 
 export const uInventory = uCommunity + '/inventory'
 export const uInventoryProfiles = uInventory + '/profiles'
@@ -53,4 +56,5 @@ export const uStoreCheckout = uStore + '/checkout'
 export const uCartCheckoutGetFinalPrice = uStoreCheckout + '/getfinalprice'
 export const uCartCheckoutInitTransaction = uStoreCheckout + '/inittransaction'
 export const uCartCheckoutFinalizeTransaction = uStoreCheckout + '/finalizetransaction'
+export const uStoreAccount = uStore + '/account'
 

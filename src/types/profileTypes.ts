@@ -110,3 +110,17 @@ export type SelectGameAvatarJSONResponse = {
     success: number,
     message: string
 }
+
+export type AccountDetails = {
+    balance: null | number,
+    currency: string,
+    country: string,
+    email: string,
+    emailStatus: string,
+    guardStatus: string
+}
+
+export type AccountSupportPageDetails = {
+    needToSpendMoreToActivateAccount: number,
+    supportMessages: string[]
+}
