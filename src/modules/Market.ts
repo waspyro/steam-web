@@ -148,7 +148,7 @@ export default class Market extends SteamWebModule {
     }
 
     getMySellListings(params: StartCountAble): Promise<MySellListingsResponseParsed> {
-        return this.request(true, mySellListings, defaultify(startCountBase, params))
+        return this.request(true, mySellListings, defaultify(Market.startCountBase, params))
         (ExpectAndRun(statusOk, asSuccessJson, (res: MySellListingsResponse) => {
             return ({
                 total: res.total_count,
@@ -174,8 +174,9 @@ export default class Market extends SteamWebModule {
         (ExpectAndRun(statusOk, asText, parseMarketStatus))
     }
 
+    static startCountBase = {start: 0, count: 100}
+
 }
 
-const startCountBase = {start: 0, count: 100}
 
 

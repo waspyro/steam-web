@@ -20,7 +20,7 @@ import {
     GetBadgesResponse,
     GetCommunityBadgeProgressResponse, GetGameAvatarsResponse,
     GetOwnedGamesResponse,
-    GetRecentlyPlayedGamesResponse, ProfileDetails
+    GetRecentlyPlayedGamesResponse, GetSteamLevelResponse, ProfileDetails
 } from "../types/profileTypes";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 import {ErrorWithContext} from "../utils/errors";
@@ -118,7 +118,7 @@ export default class Profile extends SteamWebModule {
 
     getOwnedGames = this.WebApiProfileRequest<GetOwnedGames, GetOwnedGamesResponse>
     (getOwnedGames)
-    getSteamLevel = this.WebApiProfileRequest<GetSteamLevel, GetOwnedGamesResponse>
+    getSteamLevel = this.WebApiProfileRequest<GetSteamLevel, GetSteamLevelResponse>
     (getSteamLevel)
     getBadges = this.WebApiProfileRequest<GetBadges, GetBadgesResponse>
     (getBadges)
