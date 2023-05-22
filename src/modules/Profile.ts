@@ -7,7 +7,7 @@ import {
     getCommunityBadgeProgress, getGameAvatars, GetOwnedGames,
     getOwnedGames, GetRecentlyPlayedGames,
     getRecentlyPlayedGames, GetSteamLevel,
-    getSteamLevel, ProfileDetailsSettings, profilePage, resolveVanityURL, selectGameAvatar, SteamIDParam
+    getSteamLevel, ProfileDetailsSettings, profilePage, resolveVanityURL, selectGameAvatar, setLanguage, SteamIDParam
 } from "../requests/profileRequests";
 import {
     asJsonWithField,
@@ -113,6 +113,14 @@ export default class Profile extends SteamWebModule {
                 .filter(el => el !== ''))
 
             return {needToSpendMoreToActivateAccount, supportMessages}
+        }))
+    }
+
+    setLanguage(language = 'english'): Promise<true> {
+        return this.request(false, setLanguage, this.web.session.sessionid, language)
+        (r => getSuccessfulResponseJson(r).then((r: boolean) => {
+            if(!r) throw new Error('failed to set language')
+            return true
         }))
     }
 

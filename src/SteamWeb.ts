@@ -19,7 +19,6 @@ export default class SteamWeb {
     readonly #forceAuthorized = null
     constructor(public readonly session: SteamSession = new SteamSession({}), {forceAuthorized = true} = {}) {
         this.#forceAuthorized = forceAuthorized
-        this.#setDefaultCookies()
     }
 
     events = {
@@ -87,16 +86,6 @@ export default class SteamWeb {
         const profile = await this.session.me()
         if(!profile) throw new Error('Unable to get profile url')
         return this.props.profileUrl = [profile[2], profile[1], profile[0]]
-    }
-
-    #setDefaultCookies() {
-        const languageCookie = this.session.cookies.get({hostname: '.'}).find(c => c.name === 'Steam_Language')
-        if(!languageCookie || languageCookie.value !== 'english') this.session.cookies.add({
-            domain: '.',
-            path: '/',
-            name: 'Steam_Language',
-            value: 'english'
-        })
     }
 
 }

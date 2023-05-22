@@ -69,3 +69,9 @@ export const accountDetailsPage = () => [
 export const accountHelpPage = () => [
     new URL(uHelpEN)
 ] as RequestConstructorReturns
+
+export const setLanguage = (sessionid: string, language: string) => [
+    uMake(uStoreAccount, ['setlanguage']), {
+    method: 'POST',
+    body: formDataFromObject({language, sessionid})
+}] as RequestConstructorReturns
