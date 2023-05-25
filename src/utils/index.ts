@@ -53,3 +53,8 @@ export const WebApiGetRequestConstructor = <T extends any>(url: string) => (key:
     uMake(url, _, {key, format: 'json', input_json: JSON.stringify(params)}),
     {cookiesSet: 'manual', cookiesSave: 'manual'}
 ] as RequestConstructorReturns
+
+export const randInt = (lower: number, upper: number) =>
+    lower + Math.floor(Math.random() * (upper - lower + 1))
+
+export const arraySample = <T extends any[]>(arr: T): T[number] => arr[randInt(0, arr.length-1)]

@@ -1,13 +1,19 @@
 import SteamWebModule from "./SteamWebModule";
 import {
-    accountDetailsPage, accountHelpPage,
+    accountDetailsPage,
+    accountHelpPage,
     editProfileDetails,
-    GetBadges,
-    getBadges, GetCommunityBadgeProgress,
-    getCommunityBadgeProgress, getGameAvatars, GetOwnedGames,
-    getOwnedGames, GetRecentlyPlayedGames,
-    getRecentlyPlayedGames, GetSteamLevel,
-    getSteamLevel, ProfileDetailsSettings, profilePage, resolveVanityURL, selectGameAvatar, setLanguage, SteamIDParam
+    getBadges,
+    getCommunityBadgeProgress,
+    getGameAvatars,
+    getOwnedGames,
+    getRecentlyPlayedGames,
+    getSteamLevel,
+    profilePage,
+    profileSettingsPage, querySteamLocations,
+    resolveVanityURL,
+    selectGameAvatar,
+    setLanguage,
 } from "../requests/profileRequests";
 import {
     asJsonWithField,
@@ -16,19 +22,34 @@ import {
     statusOk
 } from "../utils/responseProcessors";
 import {
-    AccountDetails, AccountSupportPageDetails,
+    AccountDetails,
+    AccountSupportPageDetails,
+    GetBadges,
     GetBadgesResponse,
-    GetCommunityBadgeProgressResponse, GetGameAvatarsResponse,
+    GetCommunityBadgeProgress,
+    GetCommunityBadgeProgressResponse,
+    GetGameAvatarsResponse,
+    GetOwnedGames,
     GetOwnedGamesResponse,
-    GetRecentlyPlayedGamesResponse, GetSteamLevelResponse, ProfileDetails
+    GetRecentlyPlayedGames,
+    GetRecentlyPlayedGamesResponse,
+    GetSteamLevel,
+    GetSteamLevelResponse, ProfileBadges,
+    ProfileDetails,
+    ProfileDetailsSettings,
+    ProfileEditConfig,
+    SteamIDParam
 } from "../types/profileTypes";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 import {ErrorWithContext} from "../utils/errors";
 import ParseProfileDetails from "../parsers/parseProfileDetails";
-import {getSuccessfulResponseJson} from "steam-session/dist/common/utils";
+import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/common/utils";
 import {needsProp} from "../utils/decorators";
 import {load} from "cheerio";
 import xPriceGuessed from "../utils/xPriceGuessed";
+import {BoolNum} from "../types";
+import {arraySample, defaultify} from "../utils";
+import {obj} from "steam-session/dist/common/types";
 
 export default class Profile extends SteamWebModule {
 
@@ -47,26 +68,103 @@ export default class Profile extends SteamWebModule {
 
     setPrivacy() {}
 
-    getGameAvatars(): Promise<GetGameAvatarsResponse> {
+    getSteamGameAvatars(): Promise<GetGameAvatarsResponse> {
         return this.request(true, getGameAvatars)(getSuccessfulResponseJson)
     }
 
-    selectGameAvatar(appid: number, avatarid: number): Promise<true> {
+    setSteamGameAvatar(appid: number, avatarid: number): Promise<true> {
         return this.request(true, selectGameAvatar, this.web.session.sessionid, appid, avatarid)
-        (r => getSuccessfulResponseJson(r).then(r => {
-            if(r.success !== 1) throw new ErrorWithContext('something went wrong', r)
-            return true
-        }))
+        (getSuccessfulJsonFromResponse).then(() => true)
+    }
+
+    setRandomSteamAvatar() {
+        return this.getSteamGameAvatars().then(avatars => { //todo: tries
+            const avas = arraySample([...avatars.rgOtherGames, ...avatars.rgOwnedGames, ...avatars.rgRecentGames])
+            const appid = avas.appid
+            const avatar = arraySample(avas.avatars)
+            const avatarid = avatar.ordinal
+            return this.setSteamGameAvatar(appid, avatarid)
+        })
     }
 
     @needsProp('profile')
-    editProfileDetails(details: ProfileDetailsSettings): Promise<true> {
+    async editProfileDetails(details: ProfileDetailsSettings, assignDefaults = true): Promise<true> {
+        if(assignDefaults) {
+            const {profileDetailsDefaults} = await this.getProfileSettings()
+            details = defaultify(profileDetailsDefaults, details)
+        }
         return this.request(true, editProfileDetails, this.web.props.profileUrl, {
             sessionID: this.web.session.sessionid, ...details
-        })(r => getSuccessfulResponseJson(r).then(r => {
-            if(r.success !== 1) throw new ErrorWithContext('something wen wrong', r)
-            return true
+        })(getSuccessfulJsonFromResponse).then(() => true)
+    }
+
+    @needsProp('profile')
+    getProfileSettings(): Promise<{
+        profileEditConfig: ProfileEditConfig,
+        badgesDetails: ProfileBadges,
+        profileDetailsDefaults: ProfileDetailsSettings
+    }> {
+        return this.request(true, profileSettingsPage, this.web.props.profileUrl)
+        (r => getSuccessfullText(r).then(t => {
+            const $ = load(t)
+            const configEl = $('#profile_edit_config')
+            const profileEditConfig = configEl.data('profile-edit') as ProfileEditConfig
+            const badgesDetails = configEl.data('profile-badges') as ProfileBadges
+            const profileDetailsDefaults: ProfileDetailsSettings = {
+                personaName: profileEditConfig.strPersonaName || '',
+                real_name: profileEditConfig.strRealName || '',
+                customURL: profileEditConfig.strCustomURL || '',
+                country: profileEditConfig.LocationData.locCountryCode || '',
+                state: profileEditConfig.LocationData.locStateCode || '',
+                city: profileEditConfig.LocationData.locCityCode || '',
+                summary: profileEditConfig.strSummary || '',
+                hide_profile_awards: profileEditConfig.ProfilePreferences.hide_profile_awards
+            }
+            return {profileEditConfig, badgesDetails, profileDetailsDefaults}
         }))
+    }
+
+    querySteamLocations():
+        Promise<{"countrycode":string,"hasstates":BoolNum,"countryname":string}[]>
+    querySteamLocations(forCountry: string):
+        Promise<{"countrycode":string,"statecode":string,"statename":string}[]>
+    querySteamLocations(forCountry: string, forCity: string):
+        Promise<{"countrycode":string,"statecode":string,"cityid":number,"cityname":string}[]>
+    querySteamLocations(forCountry?: string, forCity?: string) {
+        return this.request(true, querySteamLocations, forCountry, forCity)
+        (r => getSuccessfulResponseJson(r))
+    }
+
+    //todo: come back to simple array based solution and introduce new method such as "assignRandomSteamLocation"
+    async getRandomSteamLocation<T extends obj & {country?: string, state?: string}>(
+        objectToAssign: T):
+        Promise<{country: string, state: string, city: string} & T> {
+        if(objectToAssign.city)
+            throw new ErrorWithContext('object should not include "city" prop', objectToAssign)
+        if(objectToAssign.state && !objectToAssign.country)
+            throw new ErrorWithContext('object contains "state", but does not contains "country" prop', objectToAssign)
+        defaultify({country: '', state: '', city: ''}, objectToAssign)
+        try {
+            if(!objectToAssign.country) {
+                const country = await this.querySteamLocations()
+                    .then(arraySample)
+                objectToAssign.country = country.countrycode
+                if(!country.hasstates) return objectToAssign as {country: string, state: string, city: string} & T
+            }
+            if(!objectToAssign.state) {
+                const state = await this.querySteamLocations(objectToAssign.country)
+                    .then(arraySample)
+                objectToAssign.state = state.statecode
+            }
+            const city = await this.querySteamLocations(objectToAssign.country, objectToAssign.state)
+                .then(arraySample)
+            objectToAssign.country = city.countrycode
+            objectToAssign.state = city.statecode;
+            (objectToAssign as any).city = city.cityid;
+            return objectToAssign as {country: string, state: string, city: string} & T
+        } catch (e) {
+            return objectToAssign as {country: string, state: string, city: string} & T
+        }
     }
 
     getProfileDetails(profile: [type: string, id: string, ...rest: any]): Promise<ProfileDetails> {
@@ -85,7 +183,7 @@ export default class Profile extends SteamWebModule {
         }))
     }
 
-    async getAccountDetails(): Promise<AccountDetails> {
+    getAccountDetails(): Promise<AccountDetails> {
         return this.request(true, accountDetailsPage)(r => getSuccessfullText(r).then(t => {
             const $ = load(t)
             const [balance, currency] = xPriceGuessed($('.accountRow > .price').text())
@@ -95,7 +193,7 @@ export default class Profile extends SteamWebModule {
         }))
     }
 
-    async getAccountSupportDetails(): Promise<AccountSupportPageDetails> {
+    getAccountSupportDetails(): Promise<AccountSupportPageDetails> {
         return this.request(true, accountHelpPage)(r => getSuccessfullText(r).then(t => {
             const $ = load(t)
             let needToSpendMoreToActivateAccount = 0

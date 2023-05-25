@@ -1,31 +1,14 @@
-import {_, defaultify, U, uMake, WebApiGetRequestConstructor} from "../utils";
+import {_, defaultify, uMake, WebApiGetRequestConstructor} from "../utils";
 import {
     uApiPlayerGetBadgesV1, uApiPlayerGetCommunityBadgeProgressV1,
     uApiPlayerGetOwnedGamesV1,
     uApiPlayerGetRecentlyPlayedGamesV1,
-    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity, uHelpEN, uStore, uStoreAccount,
+    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity, uCommunityQueryLocations, uHelpEN, uStoreAccount,
 } from "../assets/urls";
-import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
+import {ProfileUrlParts, RequestConstructorReturns} from "../types";
 import {formDataFromObject} from "steam-session/dist/common/utils";
 import defaultProfileDetails from "../assets/defaultProfileDetails";
-
-export type ResolveVanityURLRequest = {vanityurl: string}
-export type SteamIDParam = { steamid?: string } //todo: required but partial for constructor
-export type GetRecentlyPlayedGames = SteamIDParam & { count?: Numberable }
-export type GetCommunityBadgeProgress = SteamIDParam & { badgeid: number }
-export type GetSteamLevel = SteamIDParam
-export type GetBadges = SteamIDParam
-export type GetOwnedGames = SteamIDParam & {
-    include_appinfo?: BoolNum,
-    include_played_free_games?: BoolNum,
-    appids_filter?: number[]
-}
-
-export type ProfileDetailsSettings = Partial<{
-    personaName: string, real_name: string,
-    customURL: string, country: string, state: string,
-    city: number | string, summary: string, hide_profile_awards: BoolNum
-}>
+import { GetBadges, GetCommunityBadgeProgress, GetOwnedGames, GetRecentlyPlayedGames, GetSteamLevel, ProfileDetailsSettings } from "../types/profileTypes";
 
 export const getBadges =
     WebApiGetRequestConstructor<GetBadges>(uApiPlayerGetBadgesV1)
@@ -42,7 +25,7 @@ export const resolveVanityURL = (webapi: string, vanityurl: string) => [
     {cookiesSet: 'manual', cookiesSave: 'manual'}
 ] as RequestConstructorReturns
 
-export const profilePage = (type, id) => [
+export const profilePage = (type: string, id: string) => [
     uMake(uCommunity, [type, id])
 ] as RequestConstructorReturns
 
@@ -75,3 +58,11 @@ export const setLanguage = (sessionid: string, language: string) => [
     method: 'POST',
     body: formDataFromObject({language, sessionid})
 }] as RequestConstructorReturns
+
+export const profileSettingsPage = (profile: ProfileUrlParts) => [
+    uMake(uCommunity, [profile[0], profile[1], 'edit', 'info'])
+] as RequestConstructorReturns
+
+export const querySteamLocations = (state?: string, city?: string) => [
+    uMake(uCommunityQueryLocations, [state, city].filter(Boolean))
+] as RequestConstructorReturns

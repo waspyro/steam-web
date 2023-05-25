@@ -4,11 +4,11 @@ import {ProfileDetails} from "../types/profileTypes";
 export default (html: string): ProfileDetails => {
     const $ = load(html)
     const profileDetails: ProfileDetails = {new: false, private: false}
+    profileDetails.avatarSrc = $('div.playerAvatar > div > img')?.attr('src') || null
     if($('.welcome_header').length) {
         profileDetails.new = true
         return profileDetails
     }
-    profileDetails.avatarSrc = $('div.playerAvatar > div > img')?.attr('src') || null
     const classesString = $('.profile_in_game.persona').attr('class') || ''
     profileDetails.status = classesString.replace('profile_in_game persona', '').trim()
     profileDetails.statusDetails = $('.profile_in_game_name').text().trim()

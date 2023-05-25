@@ -5,6 +5,9 @@ export const uHelp = 'https://help.steampowered.com'
 
 export const uHelpEN = uHelp + '/en'
 
+export const uCommunityActions = uCommunity + '//actions'
+export const uCommunityQueryLocations = uCommunityActions + '/QueryLocations'
+
 export const uInventory = uCommunity + '/inventory'
 export const uInventoryProfiles = uInventory + '/profiles'
 

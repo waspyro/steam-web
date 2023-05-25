@@ -1,5 +1,5 @@
 import {obj} from "steam-session/dist/common/types";
-import {BoolNum} from "./index";
+import {BoolNum, Numberable} from "./index";
 
 export type GetOwnedGamesResponse = {
     response: {
@@ -69,12 +69,12 @@ export type GetRecentlyPlayedGamesResponse = {
 export type ProfileDetails = {
     new: boolean,
     private: boolean,
+    avatarSrc?: string | null,
     name?: string | null,
     realName?: string | null,
     location?: string | null,
     summary?: string | null,
     topComments?: {authorName: string, authorLink: string, timestamp: string, text: string}[],
-    avatarSrc?: string | null,
     status?: 'online' | 'in-game' | 'offline' | string | null
     statusDetails?: string
     //todo
@@ -123,4 +123,101 @@ export type AccountDetails = {
 export type AccountSupportPageDetails = {
     needToSpendMoreToActivateAccount: number,
     supportMessages: string[]
+}
+
+export type ResolveVanityURLRequest = {vanityurl: string}
+export type SteamIDParam = { steamid?: string } //todo: required but partial for constructor
+export type GetRecentlyPlayedGames = SteamIDParam & { count?: Numberable }
+export type GetCommunityBadgeProgress = SteamIDParam & { badgeid: number }
+export type GetSteamLevel = SteamIDParam
+export type GetBadges = SteamIDParam
+export type GetOwnedGames = SteamIDParam & {
+    include_appinfo?: BoolNum,
+    include_played_free_games?: BoolNum,
+    appids_filter?: number[]
+}
+
+export type ProfileDetailsSettings = Partial<{
+    personaName: string,
+    real_name: string,
+    customURL: string,
+    country: string,
+    state: string,
+    city: number | string,
+    summary: string,
+    hide_profile_awards: number
+}>
+
+export type ProfileConfig = {
+    ProfileURL: string
+} | undefined
+
+export type ProfileEditConfig = {
+    "strPersonaName": string,
+    "strCustomURL": string,
+    "strRealName": string,
+    "strSummary": string,
+    "strAvatarHash": string,
+    "rtPersonaNameBannedUntil": number,
+    "rtProfileSummaryBannedUntil": number,
+    "rtAvatarBannedUntil": number,
+    "LocationData": {
+        "locCountry": string,
+        "locCountryCode": string,
+        "locState": string,
+        "locStateCode": string,
+        "locCity": string,
+        "locCityCode": number
+    },
+    "ActiveTheme"?: {
+        "theme_id": string,
+        "title": string
+    },
+    "ProfilePreferences": {
+        "hide_profile_awards": number
+    },
+    "rgAvailableThemes": {
+        theme_id: string,
+        title: string
+    }[],
+    "rgGoldenProfileData": {
+        appid: number,
+        css_url: string,
+        frame_url: null | string,
+        miniprofile_background: null | string,
+        miniprofile_movie: null | {"video/webm"?: string, "video/mp4"?: string}
+    }[],
+    "Privacy": {
+        "PrivacySettings": { //todo: enums
+            "PrivacyProfile": number,
+            "PrivacyInventory": number,
+            "PrivacyInventoryGifts": number,
+            "PrivacyOwnedGames": number,
+            "PrivacyPlaytime": number,
+            "PrivacyFriendsList": number
+        },
+        "eCommentPermission": number
+    },
+    "PrimaryGroup"?: {
+        "steamid": string,
+        "avatarHash": string,
+        "name": string
+    }
+} | undefined
+
+export type ProfileBadges = {
+    rgBadges: Record<string, {
+        badgeid: number | "",
+        icon: string,
+        name: string,
+        xp: string,
+        communityitemid?: string,
+        item_type?: number,
+        appid?: number,
+        border_color: number
+    }>,
+    FavoriteBadge: {
+        "badgeid": "" | number, //??
+        "communityitemid": string //??
+    }
 }
