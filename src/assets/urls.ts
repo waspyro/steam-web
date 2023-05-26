@@ -56,6 +56,7 @@ export const uStoreBundlePage = uStore + '/bundle'
 
 export const uStoreCart = uStore + '/cart'
 export const uStoreCheckout = uStore + '/checkout'
+export const uStoreCheckoutAddFreeLicense = uStoreCheckout + '/addfreelicense'
 export const uCartCheckoutGetFinalPrice = uStoreCheckout + '/getfinalprice'
 export const uCartCheckoutInitTransaction = uStoreCheckout + '/inittransaction'
 export const uCartCheckoutFinalizeTransaction = uStoreCheckout + '/finalizetransaction'

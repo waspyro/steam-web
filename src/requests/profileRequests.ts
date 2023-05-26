@@ -1,11 +1,17 @@
 import {_, defaultify, uMake, WebApiGetRequestConstructor} from "../utils";
 import {
-    uApiPlayerGetBadgesV1, uApiPlayerGetCommunityBadgeProgressV1,
+    uApiPlayerGetBadgesV1,
+    uApiPlayerGetCommunityBadgeProgressV1,
     uApiPlayerGetOwnedGamesV1,
     uApiPlayerGetRecentlyPlayedGamesV1,
-    uApiPlayerGetSteamLevelV1, uApiUserResolveVanityURLV1, uCommunity, uCommunityQueryLocations, uHelpEN, uStoreAccount,
+    uApiPlayerGetSteamLevelV1,
+    uApiUserResolveVanityURLV1,
+    uCommunity,
+    uCommunityQueryLocations,
+    uHelpEN,
+    uStoreAccount, uStoreCheckoutAddFreeLicense,
 } from "../assets/urls";
-import {ProfileUrlParts, RequestConstructorReturns} from "../types";
+import {Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
 import {formDataFromObject} from "steam-session/dist/common/utils";
 import defaultProfileDetails from "../assets/defaultProfileDetails";
 import { GetBadges, GetCommunityBadgeProgress, GetOwnedGames, GetRecentlyPlayedGames, GetSteamLevel, ProfileDetailsSettings } from "../types/profileTypes";
@@ -66,3 +72,13 @@ export const profileSettingsPage = (profile: ProfileUrlParts) => [
 export const querySteamLocations = (state?: string, city?: string) => [
     uMake(uCommunityQueryLocations, [state, city].filter(Boolean))
 ] as RequestConstructorReturns
+
+export const addFreeLicense = (sessionid: string, subid: Numberable) => [
+    new URL(uStoreCheckoutAddFreeLicense), {
+    method: 'POST',
+    body: formDataFromObject({
+        action: 'add_to_cart',
+        sessionid: sessionid,
+        subid: subid.toString()
+    })
+}] as RequestConstructorReturns

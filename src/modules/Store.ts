@@ -4,7 +4,7 @@ import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/s
 import {
     asJson,
     asSuccessJson,
-    ExpectAndRun,
+    ExpectAndRun, getSuccessfullText,
     statusOk
 } from "../utils/responseProcessors";
 import {
@@ -20,6 +20,7 @@ import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+import {addFreeLicense} from "../requests/profileRequests";
 
 export default class Store extends SteamWebModule {
 
@@ -78,6 +79,14 @@ export default class Store extends SteamWebModule {
     addItemToCart() {}
     rmItemFromCart() {}
     checkoutWithWallet() {}
+
+    addFreeLicense(subid: Numberable) {
+        return this.request(true, addFreeLicense, this.web.session.sessionid, subid)
+        (getSuccessfullText).then(text => {
+            if(!text.includes('<h2>Success!</h2>')) throw new Error('Failed to add free license to account')
+            return true
+        })
+    }
 
     #setDefaultStoreCookies() { //todo temporary cookies? use decorators?
         const store = this.web.session.cookies
