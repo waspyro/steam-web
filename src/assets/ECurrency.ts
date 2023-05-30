@@ -54,7 +54,7 @@ export type ECurrencyValues = typeof ECurrency[ECurrencyKeys]
 
 //cut from ECurrency, maybe it is possible extract it with some
 //generic type but i don't know how
-export type ECounty =
+export type ECountry =
 "US"|  "GB"|  "EU"|  "CH"|  "RU"|
 "PL"|  "BR"|  "JP"|  "NO"|  "ID"|
 "MY"|  "PH"|  "SG"|  "TH"|  "VN"|

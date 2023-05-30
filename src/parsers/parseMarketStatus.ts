@@ -1,9 +1,9 @@
-import {ECounty, ECurrencyValues} from "../assets/ECurrency";
+import {ECountry, ECurrencyValues} from "../assets/ECurrency";
 import {BoolNum, Numberable} from "../types";
 
 export type RGWalletInfo = {
     currency: ECurrencyValues,
-    county: ECounty,
+    country: ECountry,
     state: string,
     fee: '1' | Numberable,
     fee_minimum: '1' | Numberable,

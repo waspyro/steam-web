@@ -14,7 +14,7 @@ import {
     PackageDetails, StoreSearchParams, StoreSearchResponse
 } from "../types/storeTypes";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
-import {ECounty} from "../assets/ECurrency";
+import {ECountry} from "../assets/ECurrency";
 import parseStoreBundlePage, {BundleDetailsParsed} from "../parsers/parseStoreBundlePage";
 import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
@@ -39,20 +39,20 @@ export default class Store extends SteamWebModule {
     })
 
     getAppDetails(
-        appid: Numberable, countryCode?: ECounty, filters?: AppDetailsFilters[]
+        appid: Numberable, countryCode?: ECountry, filters?: AppDetailsFilters[]
     ): Promise<AppDetails> {
         return this.request(false, appDetails, [appid], countryCode, filters)
         (Store.SuccessfulJsonWithOneID(appid))
     }
 
     getAppsPriceOverview(
-        appids: Numberable[], countryCode?: ECounty
+        appids: Numberable[], countryCode?: ECountry
     ): Promise<AppDetailsPriceOverviewResponse> {
         return this.request(false, appDetails, appids, countryCode, ['price_overview'])
         (ExpectAndRun(statusOk, asJson))
     }
 
-    packageDetails(packageid: Numberable, countyCode?: ECounty): Promise<PackageDetails> {
+    packageDetails(packageid: Numberable, countyCode?: ECountry): Promise<PackageDetails> {
         return this.request(false, packageDetails, packageid, countyCode)
         (Store.SuccessfulJsonWithOneID(packageid))
     }
