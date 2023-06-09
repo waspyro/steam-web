@@ -13,7 +13,7 @@
   },
   "description": "",
   "keywords": [],
-  "author": "waspyru",
+  "author": "waspyro",
   "license": "ISC",
   "dependencies": {
     "@types/steamid": "^2.0.1",

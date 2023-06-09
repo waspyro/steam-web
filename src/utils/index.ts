@@ -51,7 +51,7 @@ export const normalizeTradeofferAssets = (
 
 export const WebApiGetRequestConstructor = <T extends any>(url: string) => (key: string, params: T) => [
     uMake(url, _, {key, format: 'json', input_json: JSON.stringify(params)}),
-    {cookiesSet: 'manual', cookiesSave: 'manual'}
+    {autoCookies: false}
 ] as RequestConstructorReturns
 
 export const randInt = (lower: number, upper: number) =>

@@ -76,9 +76,21 @@ export default class Store extends SteamWebModule {
     }
 
     //todo .createCart, or external manager?
-    addItemToCart() {}
-    rmItemFromCart() {}
-    checkoutWithWallet() {}
+    getCartDetails(cartID: string) {
+
+    }
+
+    addItemToCart(cartid, itemID, isBundle) {
+
+    }
+
+    rmItemFromCart(cartid) {
+
+    }
+
+    checkoutWithWallet() {
+
+    }
 
     addFreeLicense(subid: Numberable) {
         return this.request(true, addFreeLicense, this.web.session.sessionid, subid)
@@ -92,13 +104,13 @@ export default class Store extends SteamWebModule {
         const store = this.web.session.cookies
         const url = new URL(uStore)
         const cookies = store.get(url)
-        if(!cookies.find(c => c.name === 'birthtime')) store.add({
+        if(!cookies.get('birthtime')) store.add({
             domain: url.hostname,
             path: '/',
             name: 'birthtime',
             value: '880927201'
         })
-        if(!cookies.find(c => c.name === 'lastagecheckage')) store.add({
+        if(!cookies.get('lastagecheckage')) store.add({
             domain: url.hostname,
             path: '/',
             name: 'lastagecheckage',

@@ -28,7 +28,7 @@ export const getSteamLevel =
     WebApiGetRequestConstructor<GetSteamLevel>(uApiPlayerGetSteamLevelV1)
 export const resolveVanityURL = (webapi: string, vanityurl: string) => [
     uMake(uApiUserResolveVanityURLV1, _, {key: webapi, vanityurl}),
-    {cookiesSet: 'manual', cookiesSave: 'manual'}
+    {autoCookies: false}
 ] as RequestConstructorReturns
 
 export const profilePage = (type: string, id: string) => [

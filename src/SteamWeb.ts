@@ -88,4 +88,12 @@ export default class SteamWeb {
         return this.props.profileUrl = [profile[2], profile[1], profile[0]]
     }
 
+    static async fromRestoredSession(
+      steamSessionParams: Parameters<typeof SteamSession['restore']>[0],
+      steamWebParams?: ConstructorParameters<typeof SteamWeb>[1]
+    ) {
+        const session = await SteamSession.restore(steamSessionParams)
+        return new SteamWeb(session, steamWebParams)
+    }
+
 }

@@ -1,20 +1,18 @@
 import {_, EMPA, uMake} from "../utils";
 import {
-    uApiEconDeclineTradeV1, uApiEconGetTradeSummaryV1,
+    uApiEconDeclineTradeV1,
+    uApiEconGetTradeSummaryV1,
     uApiEconGetTradesV1,
     uApiEconGetTradeV1,
-    uApiEconService, uCommunity, uTradeofferNew, uTradeofferNewSend,
-    uTradeoffer
+    uApiEconService,
+    uCommunity,
+    uTradeoffer,
+    uTradeofferNew,
+    uTradeofferNewSend
 } from "../assets/urls";
 import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
-import {RequestOpts} from "steam-session/dist/common/types";
 
 const tradeofferPageUrl = (partner, token) => uMake(uTradeofferNew,_, {partner, token})
-
-const noCookies: RequestOpts = {
-    cookiesSet: 'manual',
-    cookiesSave: 'manual'
-}
 
 export const acceptTradeOffer = (
     sessionid: string, tradeofferid: string, partnerSteamID64: string,
@@ -32,14 +30,14 @@ export const cancelTradeOffer = (webapikey: string, tradeofferid: string) => [
     new URL(uApiEconService), {
     method: 'POST',
     body: new URLSearchParams({key: webapikey, tradeofferid}),
-    ...noCookies
+    autoCookies: false
 }] as RequestConstructorReturns
 
 export const declineTradeOffer = (webapikey: string, tradeofferid: string) => [
     new URL(uApiEconDeclineTradeV1), {
     method: 'POST',
     body: new URLSearchParams({key: webapikey, tradeofferid}),
-    ...noCookies
+    autoCookies: false
 }] as RequestConstructorReturns
 
 export const getTradeOffers = (webapi: string, {
@@ -54,17 +52,17 @@ export const getTradeOffers = (webapi: string, {
         time_historical_cutoff: time, //todo: format
         language,
     }), {
-    ...noCookies
+    autoCookies: false
 }] as RequestConstructorReturns
 
 export const getTradeOffer = (webapikey: string, tradeofferid: string, descriptions: BoolNum, language = 'en') => [
     uMake(uApiEconGetTradeV1,_, {key: webapikey, tradeofferid, get_descriptions: descriptions, language}), {
-    ...noCookies
+    autoCookies: false
 }] as RequestConstructorReturns
 
 export const getTradeOffersSummary = (webapikey: string, timeLastVisitSec?: number) => [
     uMake(uApiEconGetTradeSummaryV1,_, {key: webapikey, time_last_visit: timeLastVisitSec}), {
-    ...noCookies
+    autoCookies: false
 }] as const
 
 export const sendTradeOffer = (
