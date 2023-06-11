@@ -83,7 +83,8 @@ export default class StoreCart extends SteamWebModule {
   }
 
   async #finalizeCartTransaction(transid: string): Promise<true> {
-    const resp = await this.request(true, finalizeTransaction, this.state.id, transid)
+    const {width, height} = this.web.meta.viewport
+    const resp = await this.request(true, finalizeTransaction, this.state.id, transid, height, width)
     (getSuccessfulResponseJson)
     if(Number(resp.success) !== 22)
       throw new Error('steam return bad success status:\n' + JSON.stringify(resp))

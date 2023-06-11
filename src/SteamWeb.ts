@@ -1,6 +1,6 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
-import {ProfileUrlParts, RequestConstructor} from "./types";
+import {DeepPartial, ProfileUrlParts, RequestConstructor, SteamWebOptions} from "./types";
 import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
@@ -16,9 +16,16 @@ type Props = {
 }
 
 export default class SteamWeb {
-    readonly #forceAuthorized = null
-    constructor(public readonly session: SteamSession = new SteamSession({}), {forceAuthorized = true} = {}) {
-        this.#forceAuthorized = forceAuthorized
+    readonly #forceAuthorized
+    readonly meta: SteamWebOptions['meta']
+
+    constructor(public readonly session: SteamSession = new SteamSession({}), opts: DeepPartial<SteamWebOptions> = {}) {
+        this.#forceAuthorized = opts.forceAuthorized ?? false
+        const meta = opts.meta ?? {}
+        if(!meta.viewport) meta.viewport = {}
+        if(!meta.viewport.height) meta.viewport.height = 1050
+        if(!meta.viewport.width) meta.viewport.width = 1680
+        this.meta = meta as SteamWebOptions['meta']
     }
 
     events = {

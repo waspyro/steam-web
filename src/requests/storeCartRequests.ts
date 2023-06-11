@@ -123,7 +123,10 @@ export const initTransaction = (sessionid, shoppingCartGID, countryCode) => [
     })
 }] as RequestConstructorReturns
 
-export const finalizeTransaction = (shoppingCartGID, transid) => [
+export const finalizeTransaction = (
+  shoppingCartGID: string, transid: string,
+  screenHeight: number, screenWidth: number
+) => [
   new URL(uCartCheckoutFinalizeTransaction), {
     headers: {
       Origin: uStore,
@@ -139,8 +142,8 @@ export const finalizeTransaction = (shoppingCartGID, transid) => [
         'language': 'en-GB',
         'javaEnabled': 'false',
         'colorDepth': 30,
-        'screenHeight': 1050,
-        'screenWidth': 1680
+        'screenHeight': screenHeight,
+        'screenWidth': screenWidth
       })
     })
   }
