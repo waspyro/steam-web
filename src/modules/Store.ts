@@ -21,6 +21,7 @@ import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
 import {addFreeLicense} from "../requests/profileRequests";
+import StoreCart from "./StoreCart";
 
 export default class Store extends SteamWebModule {
 
@@ -75,21 +76,8 @@ export default class Store extends SteamWebModule {
         }))
     }
 
-    //todo .createCart, or external manager?
-    getCartDetails(cartID: string) {
-
-    }
-
-    addItemToCart(cartid, itemID, isBundle) {
-
-    }
-
-    rmItemFromCart(cartid) {
-
-    }
-
-    checkoutWithWallet() {
-
+    createCart(id?: string) {
+        return new StoreCart(this.web, id)
     }
 
     addFreeLicense(subid: Numberable) {

@@ -9,14 +9,14 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   cheerio:
-    specifier: ^1.0.0-rc.12
+    specifier: 1.0.0-rc.12
     version: 1.0.0-rc.12
   listenable:
     specifier: github:waspyro/ts-listenable
     version: github.com/waspyro/ts-listenable/6a49d4207e4ea0003426d8d7049656e7b85ed885
   steam-session:
     specifier: github:waspyro/steam-session
-    version: github.com/waspyro/steam-session/7a57af0971a4430d6c7c0a8a68b33e533c5df5c4
+    version: github.com/waspyro/steam-session/3f2cccba8d19d94db8176fc73ce48f5539ccd643
   steamid:
     specifier: ^2.0.0
     version: 2.0.0
@@ -355,8 +355,8 @@ packages:
       mkdirp: github.com/waspyro/node-mkdirp/aab81d6b219b82624c9c12c0e5de0ef5ae59f377
     dev: true
 
-  github.com/waspyro/steam-session/7a57af0971a4430d6c7c0a8a68b33e533c5df5c4:
-    resolution: {tarball: https://codeload.github.com/waspyro/steam-session/tar.gz/7a57af0971a4430d6c7c0a8a68b33e533c5df5c4}
+  github.com/waspyro/steam-session/3f2cccba8d19d94db8176fc73ce48f5539ccd643:
+    resolution: {tarball: https://codeload.github.com/waspyro/steam-session/tar.gz/3f2cccba8d19d94db8176fc73ce48f5539ccd643}
     name: steam-session
     version: 0.2.9
     prepare: true

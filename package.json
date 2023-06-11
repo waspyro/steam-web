@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/steamid": "^2.0.1",
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "1.0.0-rc.12",
     "listenable": "github:waspyro/ts-listenable",
     "steam-session": "github:waspyro/steam-session",
     "steamid": "^2.0.0"
