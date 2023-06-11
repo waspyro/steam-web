@@ -1,13 +1,13 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
-import {DeepPartial, ProfileUrlParts, RequestConstructor, SteamWebOptions} from "./types";
+import {DeepPartial, ProfileUrlParts, RequestConstructor, SteamWebConstructorParams} from "./types";
 import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
 import Market from "./modules/Market";
 import {Trade} from "./modules/Trade";
 import Store from "./modules/Store";
-import {RequestOpts} from "steam-session/dist/common/types";
+import {RequestOpts, SteamSessionRestoreConstructorParams} from "steam-session/dist/common/types";
 import Profile from "./modules/Profile";
 
 type Props = {
@@ -17,15 +17,18 @@ type Props = {
 
 export default class SteamWeb {
     readonly #forceAuthorized
-    readonly meta: SteamWebOptions['meta']
+    readonly meta: SteamWebConstructorParams['meta']
 
-    constructor(public readonly session: SteamSession = new SteamSession({}), opts: DeepPartial<SteamWebOptions> = {}) {
+    constructor(
+        public readonly session: SteamSession = new SteamSession({}),
+        opts: DeepPartial<SteamWebConstructorParams> = {})
+    {
         this.#forceAuthorized = opts.forceAuthorized ?? false
         const meta = opts.meta ?? {}
         if(!meta.viewport) meta.viewport = {}
         if(!meta.viewport.height) meta.viewport.height = 1050
         if(!meta.viewport.width) meta.viewport.width = 1680
-        this.meta = meta as SteamWebOptions['meta']
+        this.meta = meta as SteamWebConstructorParams['meta']
     }
 
     events = {
@@ -95,12 +98,9 @@ export default class SteamWeb {
         return this.props.profileUrl = [profile[2], profile[1], profile[0]]
     }
 
-    static async fromRestoredSession(
-      steamSessionParams: Parameters<typeof SteamSession['restore']>[0],
-      steamWebParams?: ConstructorParameters<typeof SteamWeb>[1]
-    ) {
-        const session = await SteamSession.restore(steamSessionParams)
-        return new SteamWeb(session, steamWebParams)
-    }
+    // on the edge
+    static fromRestoredSession = (
+      params: SteamSessionRestoreConstructorParams & SteamWebConstructorParams,
+    ) => SteamSession.restore(params).then(session => new SteamWeb(session, params))
 
 }
