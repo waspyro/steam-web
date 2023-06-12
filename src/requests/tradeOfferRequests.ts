@@ -10,7 +10,8 @@ import {
     uTradeofferNew,
     uTradeofferNewSend
 } from "../assets/urls";
-import {BoolNum, Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
+import {BoolNum, Numberable, RequestConstructorReturns} from "../types";
+import {ProfileUrlParts} from "../types/profileTypes";
 
 const tradeofferPageUrl = (partner, token) => uMake(uTradeofferNew,_, {partner, token})
 

@@ -1,6 +1,6 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
-import {ProfileUrlParts, RequestConstructor, SteamWebConstructorParams} from "./types";
+import {RequestConstructor, SteamWebConstructorParams} from "./types";
 import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
@@ -9,6 +9,7 @@ import {Trade} from "./modules/Trade";
 import Store from "./modules/Store";
 import {RequestOpts, SteamSessionRestoreConstructorParams} from "steam-session/dist/common/types";
 import Profile from "./modules/Profile";
+import {ProfileUrlParts} from "./types/profileTypes";
 
 type Props = {
     profileUrl: ProfileUrlParts,

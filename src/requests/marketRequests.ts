@@ -12,9 +12,10 @@ import {
     uMarketSellListings
 } from "../assets/urls";
 import {_, EMPA, uMake} from "../utils";
-import {ProfileUrlParts, Numberable, RequestConstructorReturns} from "../types";
+import {Numberable, RequestConstructorReturns} from "../types";
 import {Item, ItemWithNameid, MarketAsset, MarketSearchRequestParams, StartCountAble} from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
+import {ProfileUrlParts} from "../types/profileTypes";
 
 export const listingPage = (item: Item) => [
     uMake(uMarketListings, [item.appid, item.market_hash_name])

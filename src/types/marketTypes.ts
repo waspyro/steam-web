@@ -1,5 +1,5 @@
-import {DescriptionsCommon} from "../requests/inventoryRequests";
 import {Numberable} from "./index";
+import {DescriptionsCommon} from "./inventoryTypes";
 
 export type MarketItemPriceOverviewResponse = {
     success: boolean,

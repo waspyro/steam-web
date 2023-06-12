@@ -221,3 +221,5 @@ export type ProfileBadges = {
         "communityitemid": string //??
     }
 }
+
+export type ProfileUrlParts = [type: 'profiles' | 'id' | string, id: string, full?: string]

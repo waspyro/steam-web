@@ -11,10 +11,18 @@ import {
     uHelpEN,
     uStoreAccount, uStoreCheckoutAddFreeLicense,
 } from "../assets/urls";
-import {Numberable, ProfileUrlParts, RequestConstructorReturns} from "../types";
+import {Numberable, RequestConstructorReturns} from "../types";
 import {formDataFromObject} from "steam-session/dist/common/utils";
 import defaultProfileDetails from "../assets/defaultProfileDetails";
-import { GetBadges, GetCommunityBadgeProgress, GetOwnedGames, GetRecentlyPlayedGames, GetSteamLevel, ProfileDetailsSettings } from "../types/profileTypes";
+import {
+	GetBadges,
+	GetCommunityBadgeProgress,
+	GetOwnedGames,
+	GetRecentlyPlayedGames,
+	GetSteamLevel,
+	ProfileDetailsSettings,
+	ProfileUrlParts
+} from "../types/profileTypes";
 
 export const getBadges =
     WebApiGetRequestConstructor<GetBadges>(uApiPlayerGetBadgesV1)

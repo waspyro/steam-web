@@ -16,7 +16,7 @@ import {
 import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
 import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
 import {ErrorWithContext} from "../utils/errors";
-import {Numberable, ProfileUrlParts, SessionHTTPResponse} from "../types";
+import {Numberable, SessionHTTPResponse} from "../types";
 import xPriceGuessed from "../utils/xPriceGuessed";
 import {
     MarketItemPriceOverviewResponse,
@@ -37,6 +37,7 @@ import {defaultify} from "../utils";
 import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {needsProp} from "../utils/decorators";
 import parseMarketStatus, {MarketStatus} from "../parsers/parseMarketStatus";
+import {ProfileUrlParts} from "../types/profileTypes";
 
 export default class Market extends SteamWebModule {
 
