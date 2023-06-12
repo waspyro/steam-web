@@ -100,10 +100,10 @@ export type InventoryContexts<T = obj> = {
 }
 
 export type InventoryRequestOpts = {
-	steamid: string,
-	appid?: string | number,
-	contextid: string | number,
-	count: number,
+	steamid?: string,
+	appid: string | number,
+	contextid?: string | number,
+	count?: number,
 	language?: string,
 	referer?: ProfileUrlParts
 	startAssetid?: string,
