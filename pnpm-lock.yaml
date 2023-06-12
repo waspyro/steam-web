@@ -16,7 +16,7 @@ dependencies:
     version: github.com/waspyro/ts-listenable/6a49d4207e4ea0003426d8d7049656e7b85ed885
   steam-session:
     specifier: github:waspyro/steam-session
-    version: github.com/waspyro/steam-session/a588c6f0fa8197421de1c2b1de0b995e288e4cbb
+    version: github.com/waspyro/steam-session/c57f46e21c1301068c8d4144cf41a67d2121fde4
   steamid:
     specifier: ^2.0.0
     version: 2.0.0
@@ -355,8 +355,8 @@ packages:
       mkdirp: github.com/waspyro/node-mkdirp/aab81d6b219b82624c9c12c0e5de0ef5ae59f377
     dev: true
 
-  github.com/waspyro/steam-session/a588c6f0fa8197421de1c2b1de0b995e288e4cbb:
-    resolution: {tarball: https://codeload.github.com/waspyro/steam-session/tar.gz/a588c6f0fa8197421de1c2b1de0b995e288e4cbb}
+  github.com/waspyro/steam-session/c57f46e21c1301068c8d4144cf41a67d2121fde4:
+    resolution: {tarball: https://codeload.github.com/waspyro/steam-session/tar.gz/c57f46e21c1301068c8d4144cf41a67d2121fde4}
     name: steam-session
     version: 0.2.9
     prepare: true

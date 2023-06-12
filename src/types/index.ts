@@ -35,8 +35,8 @@ export type BoolNum = 1 | 0
 export type SessionHTTPResponse = Awaited<ReturnType<SteamSession['request']>>
 
 export type SteamWebConstructorParams = {
-    forceAuthorized: boolean,
-    meta: {
+    forceAuthorized?: boolean,
+    meta?: {
         viewport: {
             width: number,
             height: number

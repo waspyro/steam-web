@@ -1,6 +1,6 @@
 import SteamSession from "steam-session";
 import Inventory from "./modules/Inventory";
-import {DeepPartial, ProfileUrlParts, RequestConstructor, SteamWebConstructorParams} from "./types";
+import {ProfileUrlParts, RequestConstructor, SteamWebConstructorParams} from "./types";
 import {ResponseProcessor} from "./utils/responseProcessors";
 import Listenable from "listenable";
 import WebApi from "./modules/WebApi";
@@ -21,10 +21,10 @@ export default class SteamWeb {
 
     constructor(
         public readonly session: SteamSession = new SteamSession({}),
-        opts: DeepPartial<SteamWebConstructorParams> = {})
+        opts: SteamWebConstructorParams = {})
     {
         this.#forceAuthorized = opts.forceAuthorized ?? false
-        const meta = opts.meta ?? {}
+        const meta = opts.meta ?? {} as any
         if(!meta.viewport) meta.viewport = {}
         if(!meta.viewport.height) meta.viewport.height = 1050
         if(!meta.viewport.width) meta.viewport.width = 1680
