@@ -37,7 +37,7 @@ export default class Inventory {
 				throw new Error('Missing steamid option and session.steamid not yet initialized to use it as default')
 		if(!o.referer)
 			o.referer = this.web.props.profileUrl || ['profiles', opts.steamid]
-		return opts as T & {steamid: string, rejerer: ProfileUrlParts}
+		return opts as T & {steamid: string, referer: ProfileUrlParts}
 	}
 
 	private defaultify = (opts: InventoryRequestOpts) => {
@@ -77,7 +77,7 @@ export default class Inventory {
 		return {descriptions, assets}
 	}
 
-	async loadWhole(opts: WholeInventoryOpts) {
+	async loadWhole(opts: WholeInventoryOpts = {}) {
 		const contexts = await this.getContexts(opts)
 		for(const appid in contexts) {
 			for(const contextid in contexts[appid].rgContexts) {
@@ -90,7 +90,7 @@ export default class Inventory {
 		return contexts as InventoryContexts<{items: AssetsDescriptionsCollection}>
 	}
 
-	getContexts(opts: {steamid?: string, referer?: ProfileUrlParts}): Promise<InventoryContexts> {
+	getContexts(opts: {steamid?: string, referer?: ProfileUrlParts} = {}): Promise<InventoryContexts> {
 		this.setDefaultSteamIDAndRefererOpts(opts)
 		return this.request(false, inventoryPage, opts.referer)
 		(getSuccessfullText).then(text => {

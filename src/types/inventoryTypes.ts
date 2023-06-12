@@ -1,6 +1,7 @@
 import {obj} from "steam-session/dist/common/types";
 
 import {ProfileUrlParts} from "./profileTypes";
+import {Numberable} from "./index";
 
 export type OpenBoosterPackResponse = {
 	"success": 1 | number,
@@ -101,8 +102,8 @@ export type InventoryContexts<T = obj> = {
 
 export type InventoryRequestOpts = {
 	steamid?: string,
-	appid: string | number,
-	contextid?: string | number,
+	appid: Numberable,
+	contextid?: Numberable,
 	count?: number,
 	language?: string,
 	referer?: ProfileUrlParts
