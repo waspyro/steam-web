@@ -1,5 +1,6 @@
 import SteamWebModule from "./SteamWebModule";
 import {
+    eligibilityCheck,
     itemOrdersHistogram,
     itemPriceOverview,
     listingPage, marketHomePage, marketSearch,
@@ -29,15 +30,21 @@ import {
     MarketSearchRequestParams,
     MarketSearchResponseResults,
     StartCountAble,
-    MySellListingsResponse, MySellListingsResponseParsed, MarketAsset, MarketItemSellResponse, MarketSellListingParsed
+    MySellListingsResponse,
+    MySellListingsResponseParsed,
+    MarketAsset,
+    MarketItemSellResponse,
+    MarketSellListingParsed,
+    WebTradeEligibilityCookieValue
 } from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
 import {defaultify} from "../utils";
 import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {needsProp} from "../utils/decorators";
-import parseMarketStatus, {MarketStatus} from "../parsers/parseMarketStatus";
+import parseMarketStatus, {RGWalletInfo} from "../parsers/parseMarketStatus";
 import {ProfileUrlParts} from "../types/profileTypes";
+import {drainFetchResponse} from "steam-session/dist/common/utils";
 
 export default class Market extends SteamWebModule {
 
@@ -168,11 +175,19 @@ export default class Market extends SteamWebModule {
         return this.sellItem(item, newPriceCentsAfterComission)
     }
 
-    // cancelSellListing
-
-    checkMarketStatus(): Promise<MarketStatus> {
+    checkWallet(): Promise<RGWalletInfo<number>> {
         return this.request(true, marketHomePage)
         (ExpectAndRun(statusOk, asText, parseMarketStatus))
+    }
+
+    checkWebTradeEligibility(): Promise<WebTradeEligibilityCookieValue | null> {
+        return this.request(true, eligibilityCheck)
+        (r => {
+            drainFetchResponse(r)
+            const cookie = r.setCookies.find(c => c.name === 'webTradeEligibility')
+            if(!cookie) return null
+            return JSON.parse(decodeURIComponent(cookie.value))
+        })
     }
 
     static startCountBase = {start: 0, count: 100}

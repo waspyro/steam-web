@@ -38,6 +38,7 @@ export const uTradeofferNew = uTradeoffer + '/new'
 export const uTradeofferNewSend = uTradeofferNew + '/send'
 
 export const uMarket = uCommunity + '/market'
+export const uMarketEligibilityCheck = uMarket + '/eligibilitycheck'
 export const uMarketListings = uMarket + '/listings'
 export const uMarketSellItem = uMarket + '/sellitem'
 export const uMarketPriceHistory = uMarket + '/pricehistory'

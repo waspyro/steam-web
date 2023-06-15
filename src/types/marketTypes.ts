@@ -1,4 +1,4 @@
-import {Numberable} from "./index";
+import {BoolNum, Numberable} from "./index";
 import {DescriptionsCommon} from "./inventoryTypes";
 
 export type MarketItemPriceOverviewResponse = {
@@ -182,4 +182,14 @@ export type MarketItemSellResponse = {
     "needs_mobile_confirmation": boolean,
     "needs_email_confirmation": boolean,
     "email_domain": string
+}
+
+export type WebTradeEligibilityCookieValue = {
+    "allowed": BoolNum
+    "reason"?: 32 | number
+    "expiration"?: number
+    "allowed_at_time": 0 | number
+    "steamguard_required_days": 15 | number
+    "new_device_cooldown_days": 0 | number
+    "time_checked": number
 }
