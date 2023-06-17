@@ -10,7 +10,7 @@ import {
 import {
 	AppDetails,
 	AppDetailsFilters,
-	AppDetailsPriceOverviewResponse,
+	AppDetailsPriceOverviewResponse, DynamicStoreTypes,
 	PackageDetails, StoreSearchParams, StoreSearchResponse
 } from "../types/storeTypes";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
@@ -20,8 +20,10 @@ import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
-import {addFreeLicense} from "../requests/profileRequests";
+import {addFreeLicense, dynamicStoreData} from "../requests/profileRequests";
 import StoreCart from "./StoreCart";
+import SteamID from "steamid";
+import parseDynamicStoreData from "../parsers/parseDynamicStoreData";
 
 export default class Store extends SteamWebModule {
 
@@ -85,6 +87,13 @@ export default class Store extends SteamWebModule {
 			if(!text.includes('<h2>Success!</h2>')) throw new Error('Failed to add free license to account')
 			return true
 		})
+	}
+
+	dynamicStoreData = (): Promise<DynamicStoreTypes> => {
+		return this.request(true, dynamicStoreData,
+			new SteamID(this.web.session.steamid).accountid,
+			this.web.props?.wallet?.country
+		)(r => asJson(r, parseDynamicStoreData))
 	}
 
 	#setDefaultStoreCookies() { //todo temporary cookies? use decorators?

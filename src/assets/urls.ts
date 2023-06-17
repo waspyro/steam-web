@@ -54,6 +54,8 @@ export const uStoreAppDetails = uStoreApi + '/appdetails'
 export const uStorePackagedetails = uStoreApi + '/packagedetails'
 export const uStoreSearch = uStore + '/search/results'
 export const uStoreBundlePage = uStore + '/bundle'
+export const uStoreDynamic = uStore + '/dynamicstore'
+export const uStoreDynamicUserData = uStoreDynamic + '/userdata'
 
 export const uStoreCart = uStore + '/cart'
 export const uStoreCheckout = uStore + '/checkout'

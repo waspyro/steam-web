@@ -42,7 +42,7 @@ import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
 import {defaultify} from "../utils";
 import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {needsProp} from "../utils/decorators";
-import parseMarketStatus, {RGWalletInfo} from "../parsers/parseMarketStatus";
+import parseWallet, {RGWalletInfo} from "../parsers/parseWallet";
 import {ProfileUrlParts} from "../types/profileTypes";
 import {drainFetchResponse} from "steam-session/dist/common/utils";
 
@@ -177,7 +177,7 @@ export default class Market extends SteamWebModule {
 
     checkWallet(): Promise<RGWalletInfo<number>> {
         return this.request(true, marketHomePage)
-        (ExpectAndRun(statusOk, asText, parseMarketStatus))
+        (ExpectAndRun(statusOk, asText, html => this.web.setProp('wallet', parseWallet(html))))
     }
 
     checkWebTradeEligibility(): Promise<WebTradeEligibilityCookieValue | null> {

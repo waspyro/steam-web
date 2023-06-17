@@ -13,7 +13,7 @@ export default class WebApi {
     check() {
         return this.request(true, apikeyPage)(getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
-            if(key.status === 'exists') this.web.props.webapi = key.key
+            if(key.status === 'exists') this.web.setProp('webapi', key.key)
             return key
         })
     }
@@ -23,6 +23,7 @@ export default class WebApi {
         (getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
             if(key.status === 'exists') throw new Error('unable to revoke key')
+            this.web.setProp('webapi', null)
             this.web.props.webapi = null
             return key
         })
@@ -33,8 +34,7 @@ export default class WebApi {
         (getSuccessfullText).then(text => {
             const key = parseWebApiPage(text)
             if(key.status !== 'exists') throw new Error('unable to register key')
-            this.web.props.webapi = key.key
-            return key.key
+            return this.web.setProp('webapi', key.key)
         })
     }
 

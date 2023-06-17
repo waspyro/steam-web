@@ -10,10 +10,12 @@ import Store from "./modules/Store";
 import {RequestOpts, SteamSessionRestoreConstructorParams} from "steam-session/dist/common/types";
 import Profile from "./modules/Profile";
 import {ProfileUrlParts} from "./types/profileTypes";
+import {RGWalletInfo} from "./parsers/parseWallet";
 
 type Props = {
     profileUrl: ProfileUrlParts,
-    webapi: string
+    webapi: string,
+    wallet: RGWalletInfo<number>
 }
 
 export default class SteamWeb {
@@ -50,7 +52,11 @@ export default class SteamWeb {
             from: 'market' | 'trade',
             item?: any,
             emailTip?: string,
-        ]>()
+        ]>(),
+        propUpdated: new Listenable<[
+            name: keyof Props,
+            value: Props[keyof Props]
+        ]>() //i don't know how to make this generic :)
     }
 
     registerRequest = (meta) => Promise.resolve(true)
@@ -88,15 +94,23 @@ export default class SteamWeb {
     store = new Store(this)
     profile = new Profile(this)
 
+    //todo: {updated, update, value}, external access with getProp or getUpdatedProp
     props: Props = {
         profileUrl: null,
-        webapi: null
+        webapi: null,
+        wallet: null
+    }
+
+    setProp<K extends keyof Props>(name: K, value: Props[K]) {
+        this.props[name] = value
+        this.events.propUpdated.emit([name, value])
+        return value
     }
 
     async updateMyProfileURL() {
         const profile = await this.session.me()
         if(!profile) throw new Error('Unable to get profile url')
-        return this.props.profileUrl = [profile[2], profile[1], profile[0]]
+        return this.setProp('profileUrl', [profile[2], profile[1], profile[0]])
     }
 
     // on the edge
