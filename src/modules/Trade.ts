@@ -9,6 +9,7 @@ import {
 import {asJson, asJsonWithField, asSuccessJson, asText, ExpectAndRun, statusOk} from "../utils/responseProcessors";
 import {needsProp} from "../utils/decorators";
 import {
+    AcceptTradeOfferResponse,
     CEconTradeOffer,
     GetTradeOffersResponse,
     GetTradeOffersSummaryResponse, SendTradeOfferResponse,
@@ -20,9 +21,12 @@ import SteamID from "steamid";
 import {EMPA, normalizeTradeofferAssets} from "../utils";
 import parseTradeofferPage from "../parsers/parseTradeofferPage";
 import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+
 export class Trade extends SteamWebModule {
 
-    acceptTradeOffer(tradeofferid: string, partnerSteamID: string) {
+    //todo: accept awaiting based on amount of items transfered – builtin or via manager helper util
+    //todo: check if confirmation required?
+    acceptTradeOffer(tradeofferid: string, partnerSteamID: string): Promise<AcceptTradeOfferResponse> {
         return this.request(true, acceptTradeOffer, this.web.session.sessionid, tradeofferid, partnerSteamID, 1, '')
         (ExpectAndRun(statusOk, asJson))
     }
@@ -42,7 +46,7 @@ export class Trade extends SteamWebModule {
     @needsProp('webapi')
     getTradeOffers(): Promise<GetTradeOffersResponse['response']> {
         return this.request(false, getTradeOffers, this.web.props.webapi, {})
-        (ExpectAndRun(statusOk, asJsonWithField('response')))
+        (ExpectAndRun(statusOk, asJsonWithField('response'))).then(normalizeTradeOffersResponse)
     }
 
     @needsProp('webapi')
@@ -51,7 +55,7 @@ export class Trade extends SteamWebModule {
         (ExpectAndRun(statusOk, asJson, r => {
             //with or without descriptions it's not returning them, so it's just offer
             if(!r.response || !r.response.offer) throw new ErrorWithContext('missing response offer', r)
-            return r.response.offer
+            return normalizeCEconTradeOffer(r.response.offer)
         }))
     }
 
@@ -105,3 +109,17 @@ export class Trade extends SteamWebModule {
 
 }
 
+const normalizeCEconTradeOffer = (offer: CEconTradeOffer) => {
+    if(!offer.items_to_give) offer.items_to_give = []
+    else if(!offer.items_to_receive) offer.items_to_receive = []
+    return offer
+}
+
+const normalizeTradeOffersResponse = (tradeOffers: GetTradeOffersResponse['response']) => {
+    if(!tradeOffers.trade_offers_received) tradeOffers.trade_offers_received = []
+    else for(const o of tradeOffers.trade_offers_received) normalizeCEconTradeOffer(o)
+    if(!tradeOffers.trade_offers_sent) tradeOffers.trade_offers_sent = []
+    else for(const o of tradeOffers.trade_offers_sent) normalizeCEconTradeOffer(o)
+    if(!tradeOffers.descriptions) tradeOffers.descriptions = [] //is it array?
+    return tradeOffers
+}

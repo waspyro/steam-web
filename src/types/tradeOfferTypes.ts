@@ -48,8 +48,8 @@ export type CEconTradeOffer = {
     message: string
     expiration_time: number
     trade_offer_state: ETradeOfferStateValues
-    items_to_give?: CEconAsset[]
-    items_to_receive?: CEconAsset[]
+    items_to_give: CEconAsset[]
+    items_to_receive: CEconAsset[]
     is_our_offer: boolean
     time_created: number // * 100
     time_updated: number // * 100
@@ -61,10 +61,10 @@ export type CEconTradeOffer = {
 
 export type GetTradeOffersResponse = {
     response: {
-        trade_offers_received?: CEconTradeOffer[]
-        trade_offers_sent?: CEconTradeOffer[],
+        trade_offers_received: CEconTradeOffer[]
+        trade_offers_sent: CEconTradeOffer[],
         next_cursor: number
-        descriptions?: any
+        descriptions: any
     }
 }
 
