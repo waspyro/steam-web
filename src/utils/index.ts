@@ -1,6 +1,7 @@
 import {TradeofferAsset, TradeofferAssetRawMinimal} from "../types/tradeOfferTypes";
 import {obj} from "steam-session/dist/common/types";
-import {RequestConstructorReturns} from "../types";
+import {Numberable, RequestConstructorReturns} from "../types";
+import SteamID from "steamid";
 
 export const EMPA = []
 export const EMPO = {}
@@ -58,3 +59,6 @@ export const randInt = (lower: number, upper: number) =>
     lower + Math.floor(Math.random() * (upper - lower + 1))
 
 export const arraySample = <T extends any[]>(arr: T): T[number] => arr[randInt(0, arr.length-1)]
+
+export const steamid2accountid = (steamid: string) => new SteamID(steamid).accountid
+export const accountid2steamid = (accountid: Numberable) => SteamID.fromIndividualAccountID(accountid).toString()
