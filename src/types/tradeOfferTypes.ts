@@ -61,8 +61,8 @@ export type CEconTradeOffer = {
 
 export type GetTradeOffersResponse = {
     response: {
-        trade_offers_received?: CEconAsset[]
-        trade_offers_sent?: CEconAsset[],
+        trade_offers_received?: CEconTradeOffer[]
+        trade_offers_sent?: CEconTradeOffer[],
         next_cursor: number
         descriptions?: any
     }
