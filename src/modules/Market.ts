@@ -35,7 +35,7 @@ import {
     MarketAsset,
     MarketItemSellResponse,
     MarketSellListingParsed,
-    WebTradeEligibilityCookieValue, SearchSteamItemsParams
+    WebTradeEligibilityCookieValue, SearchSteamItemsParams, MarketSearchResponse
 } from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
@@ -125,14 +125,14 @@ export default class Market extends SteamWebModule {
         return this.getItemOrdersDetailsRaw(...args).then(minifyItemOrdersResponse)
     }
 
-    search = (params: MarketSearchRequestParams): Promise<MarketSearchResponseResults> => {
+    search = (params: MarketSearchRequestParams): Promise<MarketSearchResponse> => {
         return this.request(false, marketSearch, params)
-        (ExpectAndRun(statusOk, asSuccessJsonWith(['results'])))
+        (ExpectAndRun(statusOk, asSuccessJson))
     }
 
     searchSteamItems = (
       params: SearchSteamItemsParams & MarketSearchRequestParams
-    ): Promise<MarketSearchResponseResults> => {
+    ): Promise<MarketSearchResponse> => {
         const {appid = 'any', categories = [], rarity = [], foilCardborder} = params
         const filters = []
         filters.push(['Game', `tag_app_${appid}`])
