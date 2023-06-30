@@ -76,7 +76,7 @@ export default class Store extends SteamWebModule {
 	}
 
 	search(params: StoreSearchParams): Promise<StoreSearchResponse & {results: ParsedStoreSearchResponse}> {
-		defaultify(params, Store.#defaultStoreSearchParams)
+		defaultify(Store.#defaultStoreSearchParams, params)
 		return this.request(false, storeSearch, params)
 		(ExpectAndRun(statusOk, asSuccessJson, (json: any) => { //StoreSearchResponse
 			json.results = parseStoreSearchResponse(json.results_html);
