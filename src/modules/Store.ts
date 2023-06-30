@@ -1,5 +1,5 @@
 import SteamWebModule from "./SteamWebModule";
-import {Numberable} from "../types";
+import {BoolNum, Numberable} from "../types";
 import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/storeRequests";
 import {
 	asJson,
@@ -24,6 +24,7 @@ import {addFreeLicense, dynamicStoreData} from "../requests/profileRequests";
 import StoreCart from "./StoreCart";
 import SteamID from "steamid";
 import parseDynamicStoreData from "../parsers/parseDynamicStoreData";
+import {defaultify} from "../utils";
 
 export default class Store extends SteamWebModule {
 
@@ -69,7 +70,13 @@ export default class Store extends SteamWebModule {
 		}))
 	}
 
+	static #defaultStoreSearchParams = {
+		ignore_preferences: 1, infinite: 1, force_infinite: 1,
+		dynamic_data: 1, query: '', start: 0, count: 100,
+	}
+
 	search(params: StoreSearchParams): Promise<StoreSearchResponse & {results: ParsedStoreSearchResponse}> {
+		defaultify(params, Store.#defaultStoreSearchParams)
 		return this.request(false, storeSearch, params)
 		(ExpectAndRun(statusOk, asSuccessJson, (json: any) => { //StoreSearchResponse
 			json.results = parseStoreSearchResponse(json.results_html);

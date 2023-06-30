@@ -193,3 +193,13 @@ export type WebTradeEligibilityCookieValue = {
     "new_device_cooldown_days": 0 | number
     "time_checked": number
 }
+
+export type SearchSteamItemsParams = {
+    appid: Numberable,
+    categories?: any[],
+    rarity?: any[],
+    foilCardborder?: BoolNum,
+    start?: number,
+    count?: number,
+    sort?: string
+}

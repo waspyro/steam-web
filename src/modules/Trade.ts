@@ -107,6 +107,8 @@ export class Trade extends SteamWebModule {
         (ExpectAndRun(statusOk, asText, parseTradeofferPage))
     }
 
+    //todo visit trade offer page to update getTradeOffers returned list by default,
+    //also as a way to check if offer is accepted?
 }
 
 const normalizeCEconTradeOffer = (offer: CEconTradeOffer) => {

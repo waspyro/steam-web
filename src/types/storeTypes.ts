@@ -27,14 +27,14 @@ export type StoreSearchParamsRequired = {
 	count: number,
 }
 
+export type StoreSearchParams = Partial<StoreSearchParamsRequired> & StoreSearchParamsOptional
+
 export type StoreSearchResponse = {
 	success: BoolNum
 	total_count: number
 	start: number
 	results_html: string
 }
-
-export type StoreSearchParams = StoreSearchParamsRequired & StoreSearchParamsOptional
 
 type PackageGroup = {
 	name: 'default' | string,

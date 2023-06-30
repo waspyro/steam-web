@@ -35,7 +35,7 @@ import {
     MarketAsset,
     MarketItemSellResponse,
     MarketSellListingParsed,
-    WebTradeEligibilityCookieValue
+    WebTradeEligibilityCookieValue, SearchSteamItemsParams
 } from "../types/marketTypes";
 import {ECurrency, ECurrencyValues} from "../assets/ECurrency";
 import {minifyItemOrdersResponse} from "../parsers/parseMarketOrders";
@@ -45,6 +45,7 @@ import {needsProp} from "../utils/decorators";
 import parseWallet, {RGWalletInfo} from "../parsers/parseWallet";
 import {ProfileUrlParts} from "../types/profileTypes";
 import {drainFetchResponse} from "steam-session/dist/common/utils";
+import {obj} from "steam-session/dist/common/types";
 
 export default class Market extends SteamWebModule {
 
@@ -127,6 +128,21 @@ export default class Market extends SteamWebModule {
     search = (params: MarketSearchRequestParams): Promise<MarketSearchResponseResults> => {
         return this.request(false, marketSearch, params)
         (ExpectAndRun(statusOk, asSuccessJsonWith(['results'])))
+    }
+
+    searchSteamItems = (
+      params: SearchSteamItemsParams & MarketSearchRequestParams
+    ): Promise<MarketSearchResponseResults> => {
+        const {appid = 'any', categories = [], rarity = [], foilCardborder} = params
+        const filters = []
+        filters.push(['Game', `tag_app_${appid}`])
+        if (foilCardborder !== undefined)
+            filters.push(['cardborder', `tag_cardborder_${foilCardborder ? 1 : 0}`])
+        for (const cat of categories)
+            filters.push(['item_class', 'tag_item_class_' + cat])
+        params.filters = filters
+        params.appid = 753
+        return this.search(params)
     }
 
     @needsProp('profile')
