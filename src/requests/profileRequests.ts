@@ -6,12 +6,12 @@ import {
 	uApiPlayerGetRecentlyPlayedGamesV1,
 	uApiPlayerGetSteamLevelV1,
 	uApiUserResolveVanityURLV1,
-	uCommunity,
+	uCommunity, uCommunityAddFriend,
 	uCommunityQueryLocations,
 	uHelpEN, uStore,
 	uStoreAccount, uStoreCheckoutAddFreeLicense, uStoreDynamic, uStoreDynamicUserData,
 } from "../assets/urls";
-import {Numberable, RequestConstructorReturns} from "../types";
+import {BoolNum, Numberable, RequestConstructorReturns} from "../types";
 import {formDataFromObject} from "steam-session/dist/common/utils";
 import defaultProfileDetails from "../assets/defaultProfileDetails";
 import {
@@ -97,4 +97,14 @@ export const dynamicStoreData = (accountid?: Numberable, accountCountry?: string
 		'referer': uStore,
 		'X-Requested-With': 'XMLHttpRequest'
 	}
+}] as RequestConstructorReturns
+
+export const addFriend = (sessionID: string, steamid: string, isAccepting: BoolNum = 0) => [
+	new URL(uCommunityAddFriend), {
+	method: 'POST',
+	body: new URLSearchParams({
+		sessionID,
+		steamid,
+		accept_invite: isAccepting.toString()
+	})
 }] as RequestConstructorReturns

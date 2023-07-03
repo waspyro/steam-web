@@ -5,8 +5,9 @@ export const uHelp = 'https://help.steampowered.com'
 
 export const uHelpEN = uHelp + '/en'
 
-export const uCommunityActions = uCommunity + '//actions'
+export const uCommunityActions = uCommunity + '//actions' //don't want to touch "//actions" thing, cos it used that way by steam
 export const uCommunityQueryLocations = uCommunityActions + '/QueryLocations'
+export const uCommunityAddFriend = uCommunity + '/actions/AddFriendAjax'
 
 export const uInventory = uCommunity + '/inventory'
 export const uInventoryProfiles = uInventory + '/profiles'
@@ -64,4 +65,3 @@ export const uCartCheckoutGetFinalPrice = uStoreCheckout + '/getfinalprice'
 export const uCartCheckoutInitTransaction = uStoreCheckout + '/inittransaction'
 export const uCartCheckoutFinalizeTransaction = uStoreCheckout + '/finalizetransaction'
 export const uStoreAccount = uStore + '/account'
-

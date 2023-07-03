@@ -1,7 +1,7 @@
 import SteamWebModule from "./SteamWebModule";
 import {
     accountDetailsPage,
-    accountHelpPage,
+    accountHelpPage, addFriend,
     editProfileDetails,
     getBadges,
     getCommunityBadgeProgress,
@@ -221,6 +221,19 @@ export default class Profile extends SteamWebModule {
             return true
         }))
     }
+
+    addFriend(steamid: string): Promise<{ "invited": string[], "success": BoolNum }> {
+        return this.request(true, addFriend, this.web.session.sessionid, steamid, 0)
+        (getSuccessfulJsonFromResponse)
+    }
+
+    // acceptFriendInvite(steamid) {
+    //     return this.request(true, addFriend, this.web.session.sessionid, steamid, 1)
+    // }
+
+    // getFriends() { //only scrapping
+    //
+    // }
 
     getOwnedGames = this.WebApiProfileRequest<GetOwnedGames, GetOwnedGamesResponse>
     (getOwnedGames)
