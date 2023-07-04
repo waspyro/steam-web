@@ -8,6 +8,7 @@ export const FeeCalculator = (appFee = DEFAULT_APP_FEE, steamFee = DEFAULT_STEAM
 
   const toBuyer = (priceWithCents: number) => { // 11_50 => 10_00; 10_00 => 8_70
     let start = Math.floor(priceWithCents / (1 + steamFee + appFee))
+    if(start < 8) return start - 1 > 0 ? start - 1 : 1
     while (++start < priceWithCents) {
       const candidate = toSeller(start)
       if(priceWithCents === candidate) return start
