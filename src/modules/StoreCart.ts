@@ -62,9 +62,9 @@ export default class StoreCart extends SteamWebModule {
   async #startCheckoutProcess() {
     for(let i = 0;; i++) {
       const resp = await this.request(true, startCheckoutProcess, this.state.id)(drainFetchResponse)
-      if(!resp.headers.has('location')) break
-      if (i > 1 && resp.headers.get('location').includes('/login/'))
-        throw new Error('infinite redirect')
+      const redirected = resp.headers.get('location') || ''
+      if(!redirected.includes('/login/')) break
+      if(i > 1) throw new Error('infinite redirect')
       await this.web.session.updateRefreshToken()
     }
     return true
