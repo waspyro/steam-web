@@ -49,7 +49,7 @@ export const startCheckoutProcess = (shoppingCartGID: CartID) => [
   uMake(uStoreCheckout, _, {purchasetype: 'self'}), {
   appendCookies: {shoppingCartGID},
   rejectSetCookies,
-  followRedirects: 2,
+  followRedirects: 0,
 }] as RequestConstructorReturns
 
 export const getFinalPrice = (shoppingCartGID, transid) => [
