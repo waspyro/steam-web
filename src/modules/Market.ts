@@ -9,7 +9,7 @@ import {
 } from "../requests/marketRequests";
 import {
     asSuccessJson,
-    asSuccessJsonWith, asText,
+    asText,
     ExpectAndRun,
     getSuccessfullText,
     statusOk
@@ -28,7 +28,6 @@ import {
     MarketItemOrderHistogramResponse,
     MarketPriceHistoryResponseNormalized,
     MarketSearchRequestParams,
-    MarketSearchResponseResults,
     StartCountAble,
     MySellListingsResponse,
     MySellListingsResponseParsed,
@@ -44,8 +43,7 @@ import parseMarketSellListings from "../parsers/parseMarketSellListings";
 import {needsProp} from "../utils/decorators";
 import parseWallet, {RGWalletInfo} from "../parsers/parseWallet";
 import {ProfileUrlParts} from "../types/profileTypes";
-import {drainFetchResponse} from "steam-session/dist/common/utils";
-import {obj} from "steam-session/dist/common/types";
+import {drainFetchResponse} from "@waspyro/steam-session/dist/common/utils";
 
 export default class Market extends SteamWebModule {
 

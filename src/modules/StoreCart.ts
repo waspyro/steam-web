@@ -11,8 +11,8 @@ import parseStoreCart, {StoreCartDetails} from "../parsers/parseStoreCart";
 import SteamWebModule from "./SteamWebModule";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import {Numberable} from "../types";
-import {ResponseWithSetCookies} from "steam-session/dist/common/types";
-import {drainFetchResponse, getSuccessfulResponseJson} from "steam-session/dist/common/utils";
+import {ResponseWithSetCookies} from "@waspyro/steam-session/dist/common/types";
+import {drainFetchResponse, getSuccessfulResponseJson} from "@waspyro/steam-session/dist/common/utils";
 import {ErrorWithContext} from "../utils/errors";
 
 export default class StoreCart extends SteamWebModule {

@@ -1,6 +1,6 @@
 import {BadJSONStatus, ErrorWithContext, UnexpectedHTTPResponseStatus} from "./errors";
 import {EMPA} from "./index";
-import {BadHTTPStatusResponseError} from "steam-session/dist/constructs/Errors";
+import {BadHTTPStatusResponseError} from "@waspyro/steam-session/dist/constructs/Errors";
 import {SessionHTTPResponse} from "../types";
 
 export type ResponseProcessor<T extends any = any> = (res: SessionHTTPResponse) => T

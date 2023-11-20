@@ -1,5 +1,5 @@
-import SteamSession from "steam-session";
-import {RequestOpts} from "steam-session/dist/common/types";
+import SteamSession from "@waspyro/steam-session";
+import {RequestOpts} from "@waspyro/steam-session/dist/common/types";
 
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
 

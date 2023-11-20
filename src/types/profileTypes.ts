@@ -1,4 +1,4 @@
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 import {BoolNum, Numberable} from "./index";
 
 export type GetOwnedGamesResponse = {

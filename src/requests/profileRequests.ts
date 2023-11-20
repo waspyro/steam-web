@@ -9,10 +9,10 @@ import {
 	uCommunity, uCommunityAddFriend,
 	uCommunityQueryLocations,
 	uHelpEN, uStore,
-	uStoreAccount, uStoreCheckoutAddFreeLicense, uStoreDynamic, uStoreDynamicUserData,
+	uStoreAccount, uStoreCheckoutAddFreeLicense, uStoreDynamicUserData,
 } from "../assets/urls";
 import {BoolNum, Numberable, RequestConstructorReturns} from "../types";
-import {formDataFromObject} from "steam-session/dist/common/utils";
+import {formDataFromObject} from "@waspyro/steam-session/dist/common/utils";
 import defaultProfileDetails from "../assets/defaultProfileDetails";
 import {
 	GetBadges,

@@ -1,4 +1,4 @@
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 
 export async function *StartCountIt<
     OPT extends {start?: number, count?: number} & obj,

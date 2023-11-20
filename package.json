@@ -17,12 +17,12 @@
   "license": "ISC",
   "dependencies": {
     "@types/steamid": "^2.0.1",
+    "@waspyro/steam-session": "^0.3.0",
     "cheerio": "1.0.0-rc.12",
-    "listenable": "github:waspyro/ts-listenable",
-    "steam-session": "github:waspyro/steam-session",
+    "echolator": "^1.0.0",
     "steamid": "^2.0.0"
   },
   "devDependencies": {
-    "persistorm": "github:waspyro/persistorm"
+    "persistorm": "^2.0.2"
   }
 }

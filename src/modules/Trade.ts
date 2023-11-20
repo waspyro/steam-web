@@ -20,7 +20,7 @@ import {ErrorWithContext} from "../utils/errors";
 import SteamID from "steamid";
 import {EMPA, normalizeTradeofferAssets} from "../utils";
 import parseTradeofferPage from "../parsers/parseTradeofferPage";
-import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+import {MalformedResponse} from "@waspyro/steam-session/dist/constructs/Errors";
 
 export class Trade extends SteamWebModule {
 

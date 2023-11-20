@@ -1,5 +1,5 @@
 import {BoolNum} from "./index";
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 
 export type StoreSearchParamsOptional = {
 	term?: string,

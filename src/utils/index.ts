@@ -1,5 +1,5 @@
 import {TradeofferAsset, TradeofferAssetRawMinimal} from "../types/tradeOfferTypes";
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 import {Numberable, RequestConstructorReturns} from "../types";
 import SteamID from "steamid";
 

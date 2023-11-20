@@ -1,13 +1,13 @@
-import SteamSession from "steam-session";
+import SteamSession from "@waspyro/steam-session";
 import Inventory from "./modules/Inventory";
 import {RequestConstructor, SteamWebConstructorParams} from "./types";
 import {ResponseProcessor} from "./utils/responseProcessors";
-import Listenable from "listenable";
+import Listenable from "echolator";
 import WebApi from "./modules/WebApi";
 import Market from "./modules/Market";
 import {Trade} from "./modules/Trade";
 import Store from "./modules/Store";
-import {RequestOpts, SteamSessionRestoreConstructorParams} from "steam-session/dist/common/types";
+import {RequestOpts, SteamSessionRestoreConstructorParams} from "@waspyro/steam-session/dist/common/types";
 import Profile from "./modules/Profile";
 import {ProfileUrlParts} from "./types/profileTypes";
 import {RGWalletInfo} from "./parsers/parseWallet";

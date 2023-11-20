@@ -40,16 +40,16 @@ import {
     ProfileEditConfig,
     SteamIDParam
 } from "../types/profileTypes";
-import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+import {MalformedResponse} from "@waspyro/steam-session/dist/constructs/Errors";
 import {ErrorWithContext} from "../utils/errors";
 import ParseProfileDetails from "../parsers/parseProfileDetails";
-import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/common/utils";
+import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "@waspyro/steam-session/dist/common/utils";
 import {needsProp} from "../utils/decorators";
 import {load} from "cheerio";
 import xPriceGuessed from "../utils/xPriceGuessed";
 import {BoolNum} from "../types";
 import {arraySample, defaultify} from "../utils";
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 
 export default class Profile extends SteamWebModule {
 

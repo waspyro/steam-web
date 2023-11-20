@@ -8,7 +8,7 @@ import {
 } from "../assets/urls";
 import {RequestConstructorReturns} from "../types";
 import {_, uMake} from "../utils";
-import {formDataFromObject} from "steam-session/dist/common/utils";
+import {formDataFromObject} from "@waspyro/steam-session/dist/common/utils";
 
 type CartID = string | undefined | '' | null
 

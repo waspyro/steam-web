@@ -1,4 +1,4 @@
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 
 import {ProfileUrlParts} from "./profileTypes";
 import {Numberable} from "./index";

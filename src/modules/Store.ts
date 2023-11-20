@@ -1,5 +1,5 @@
 import SteamWebModule from "./SteamWebModule";
-import {BoolNum, Numberable} from "../types";
+import {Numberable} from "../types";
 import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/storeRequests";
 import {
 	asJson,
@@ -19,7 +19,7 @@ import parseStoreBundlePage, {BundleDetailsParsed} from "../parsers/parseStoreBu
 import SteamWeb from "../SteamWeb";
 import {uStore} from "../assets/urls";
 import parseStoreSearchResponse, {ParsedStoreSearchResponse} from "../parsers/parseStoreSearchResponse";
-import {MalformedResponse} from "steam-session/dist/constructs/Errors";
+import {MalformedResponse} from "@waspyro/steam-session/dist/constructs/Errors";
 import {addFreeLicense, dynamicStoreData} from "../requests/profileRequests";
 import StoreCart from "./StoreCart";
 import SteamID from "steamid";

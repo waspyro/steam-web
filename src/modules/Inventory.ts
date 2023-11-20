@@ -7,7 +7,7 @@ import {defaultify} from "../utils";
 import {getSuccessfullText} from "../utils/responseProcessors";
 import parseInventoryContexts from "../parsers/parseInventoryContexts";
 import {needsProp} from "../utils/decorators";
-import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "steam-session/dist/common/utils";
+import {getSuccessfulJsonFromResponse, getSuccessfulResponseJson} from "@waspyro/steam-session/dist/common/utils";
 import {
 	Asset,
 	AssetsDescriptionsCollection,
@@ -16,7 +16,7 @@ import {
 	InventoryItemsResponse, InventoryRequestOpts, OpenBoosterPackResponse, WholeInventoryOpts
 } from "../types/inventoryTypes";
 import {ProfileUrlParts} from "../types/profileTypes";
-import {obj} from "steam-session/dist/common/types";
+import {obj} from "@waspyro/steam-session/dist/common/types";
 
 export default class Inventory {
 	private readonly request: SteamWeb['processRequest']
