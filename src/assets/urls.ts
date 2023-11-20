@@ -60,7 +60,7 @@ export const uStoreDynamicUserData = uStoreDynamic + '/userdata'
 
 export const uStoreCart = uStore + '/cart'
 export const uStoreCheckout = uStore + '/checkout'
-export const uStoreCheckoutAddFreeLicense = uStoreCheckout + '/addfreelicense'
+export const uStoreCheckoutAddFreeLicense = uStore + '/freelicense/addfreelicense'
 export const uCartCheckoutGetFinalPrice = uStoreCheckout + '/getfinalprice'
 export const uCartCheckoutInitTransaction = uStoreCheckout + '/inittransaction'
 export const uCartCheckoutFinalizeTransaction = uStoreCheckout + '/finalizetransaction'
