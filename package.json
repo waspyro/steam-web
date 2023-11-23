@@ -24,5 +24,13 @@
   },
   "devDependencies": {
     "persistorm": "^2.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waspyro/steam-web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/waspyro/steam-web/issues"
+  },
+  "homepage": "https://github.com/waspyro/steam-web#readme"
 }
