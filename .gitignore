@@ -4,3 +4,4 @@ assets/*
 dist
 test/*
 bun.lockb
+pnpm-lock.yaml

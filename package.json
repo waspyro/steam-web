@@ -16,8 +16,8 @@
   "author": "waspyro",
   "license": "ISC",
   "dependencies": {
-    "@types/steamid": "^2.0.1",
-    "@waspyro/steam-session": "^0.3.0",
+    "@types/steamid": "^2.0.3",
+    "@waspyro/steam-session": "^0.3.1",
     "cheerio": "1.0.0-rc.12",
     "echolator": "^1.0.0",
     "steamid": "^2.0.0"

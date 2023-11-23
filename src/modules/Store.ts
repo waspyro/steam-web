@@ -1,6 +1,13 @@
 import SteamWebModule from "./SteamWebModule";
-import {Numberable} from "../types";
-import {appDetails, bundlePage, packageDetails, storeSearch} from "../requests/storeRequests";
+import {AtLeast, Numberable} from "../types";
+import {
+	appDetails,
+	bundlePage,
+	deleteRecommendation,
+	packageDetails,
+	recommendGame,
+	storeSearch
+} from "../requests/storeRequests";
 import {
 	asJson,
 	asSuccessJson,
@@ -11,7 +18,7 @@ import {
 	AppDetails,
 	AppDetailsFilters,
 	AppDetailsPriceOverviewResponse, DynamicStoreTypes,
-	PackageDetails, StoreSearchParams, StoreSearchResponse
+	PackageDetails, StoreGameReviewForm, StoreSearchParams, StoreSearchResponse
 } from "../types/storeTypes";
 import {BadJSONStatus, UnexpectedHTTPResponseStatus} from "../utils/errors";
 import {ECountry} from "../assets/ECurrency";
@@ -25,6 +32,7 @@ import StoreCart from "./StoreCart";
 import SteamID from "steamid";
 import parseDynamicStoreData from "../parsers/parseDynamicStoreData";
 import {defaultify} from "../utils";
+import {needsProp} from "../utils/decorators";
 
 export default class Store extends SteamWebModule {
 
@@ -101,6 +109,29 @@ export default class Store extends SteamWebModule {
 			new SteamID(this.web.session.steamid).accountid,
 			this.web.props?.wallet?.country
 		)(r => asJson(r, parseDynamicStoreData))
+	}
+
+	#defaultReviewForm = {
+		rated_up: true, is_public: true,
+		received_compensation: false, disable_comments: false
+	}
+
+	recommendGame = (
+		review: AtLeast<Omit<StoreGameReviewForm, 'sessionid'>, 'appid' | 'comment' | 'language'>
+	) : Promise<boolean> => {
+		const r = defaultify(this.#defaultReviewForm, review) as StoreGameReviewForm
+		r.sessionid = this.web.session.sessionid
+		if(!r.steamworksappid) r.steamworksappid = r.appid
+		return this.request(true, recommendGame, r)
+		(ExpectAndRun(statusOk, asSuccessJson))
+	}
+
+	@needsProp('profile')
+	deleteRecommendation(appid: Numberable) {
+		return this.request(true, deleteRecommendation, appid, this.web.props.profileUrl, this.web.session.sessionid)
+		(ExpectAndRun(statusOk, r => r.text()
+			.then(html => !html.includes(this.web.props.profileUrl[2] + '/recommended/' + appid))
+		))
 	}
 
 	#setDefaultStoreCookies() { //todo temporary cookies? use decorators?

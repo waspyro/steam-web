@@ -187,3 +187,15 @@ export type DynamicStoreTypes = {
 	remainingCartDiscount: number,
 	totalCartDiscount: number
 }
+
+export type StoreGameReviewForm = {
+	appid: number,
+	steamworksappid: number,
+	comment: string,
+	rated_up: boolean,
+	is_public: boolean,
+	language: string,
+	received_compensation: BoolNum,
+	disable_comments: BoolNum,
+	sessionid: string
+}
