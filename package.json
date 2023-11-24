@@ -1,6 +1,6 @@
 {
   "name": "@waspyro/steam-web",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "dist/index.js",
   "type": "commonjs",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/steamid": "^2.0.3",
-    "@waspyro/steam-session": "^0.3.1",
+    "@waspyro/steam-session": "^0.3.2",
     "cheerio": "1.0.0-rc.12",
     "echolator": "^1.0.0",
     "steamid": "^2.0.0"
