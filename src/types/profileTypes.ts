@@ -7,7 +7,7 @@ export type GetOwnedGamesResponse = {
         games: {
             appid: number,
             name?: string
-            playtime_forver: number,
+            playtime_forever: number,
             img_icon_url?: string,
             has_community_visible_stats?: boolean,
             has_leaderboards?: boolean,
