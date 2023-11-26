@@ -10,7 +10,7 @@ const propRoute = (instance: SteamWebModule, prop: KnownProps) => {
     switch (prop) {
         case 'profile': return {
             get: () => instance.web.props.profileUrl,
-            update: instance.web.updateMyProfileURL.bind(instance.web)
+            update: instance.web.profile.updateMyProfileURL.bind(instance.web)
         }
         case 'steamid': return {
             get: () => instance.web.session.steamid,

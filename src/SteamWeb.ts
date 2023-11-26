@@ -19,19 +19,13 @@ type Props = {
 }
 
 export default class SteamWeb {
-    readonly #forceAuthorized
-    readonly meta: SteamWebConstructorParams['meta']
+    readonly #forceAuthorized: boolean
 
     constructor(
         public readonly session: SteamSession = new SteamSession({}),
         opts: SteamWebConstructorParams = {})
     {
         this.#forceAuthorized = opts.forceAuthorized ?? false
-        const meta = opts.meta ?? {} as any
-        if(!meta.viewport) meta.viewport = {}
-        if(!meta.viewport.height) meta.viewport.height = 1050
-        if(!meta.viewport.width) meta.viewport.width = 1680
-        this.meta = meta as SteamWebConstructorParams['meta']
     }
 
     events = {
@@ -105,12 +99,6 @@ export default class SteamWeb {
         this.props[name] = value
         this.events.propUpdated.emit([name, value])
         return value
-    }
-
-    async updateMyProfileURL() {
-        const profile = await this.session.me()
-        if(!profile) throw new Error('Unable to get profile url')
-        return this.setProp('profileUrl', [profile[2], profile[1], profile[0]])
     }
 
     // on the edge

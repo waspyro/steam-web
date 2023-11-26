@@ -15,6 +15,7 @@ import {ResponseWithSetCookies} from "@waspyro/steam-session/dist/common/types";
 import {drainFetchResponse, getSuccessfulResponseJson} from "@waspyro/steam-session/dist/common/utils";
 import {ErrorWithContext} from "../utils/errors";
 
+//TODO: add items in one request
 export default class StoreCart extends SteamWebModule {
   oldState: StoreCartDetails = {}
   state: StoreCartDetails
@@ -83,7 +84,7 @@ export default class StoreCart extends SteamWebModule {
   }
 
   async #finalizeCartTransaction(transid: string): Promise<true> {
-    const {width, height} = this.web.meta.viewport
+    const {width = 1680, height = 1050} = (this.web.session.env.meta?.viewport || {})
     const resp = await this.request(true, finalizeTransaction, this.state.id, transid, height, width)
     (getSuccessfulResponseJson)
     if(Number(resp.success) !== 22)

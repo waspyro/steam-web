@@ -227,6 +227,12 @@ export default class Profile extends SteamWebModule {
         (getSuccessfulJsonFromResponse)
     }
 
+    async updateMyProfileURL() {
+        const profile = await this.web.session.me()
+        if(!profile) throw new Error('Unable to get profile url')
+        return this.web.setProp('profileUrl', [profile[2], profile[1], profile[0]])
+    }
+
     // acceptFriendInvite(steamid) {
     //     return this.request(true, addFriend, this.web.session.sessionid, steamid, 1)
     // }

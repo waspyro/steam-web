@@ -15,12 +15,6 @@ export type SessionHTTPResponse = Awaited<ReturnType<SteamSession['request']>>
 
 export type SteamWebConstructorParams = {
     forceAuthorized?: boolean,
-    meta?: {
-        viewport: {
-            width: number,
-            height: number
-        }
-    }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
