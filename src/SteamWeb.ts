@@ -11,6 +11,9 @@ import {RequestOpts, SteamSessionRestoreConstructorParams} from "@waspyro/steam-
 import Profile from "./modules/Profile";
 import {ProfileUrlParts} from "./types/profileTypes";
 import {RGWalletInfo} from "./parsers/parseWallet";
+import {FeeCalculator} from "./helpers/FeeCalculator";
+import NameIDCollector from "./helpers/NameidCollector";
+import Descriptor from "./helpers/ItemDescriptor";
 
 type Props = {
     profileUrl: ProfileUrlParts,
@@ -105,5 +108,9 @@ export default class SteamWeb {
     static fromRestoredSession = (
       params: SteamSessionRestoreConstructorParams & SteamWebConstructorParams,
     ) => SteamSession.restore(params).then(session => new SteamWeb(session, params))
+
+    static FeeCalculator = FeeCalculator
+    static NameidCollector = NameIDCollector
+    static ItemDescriptor = Descriptor
 
 }

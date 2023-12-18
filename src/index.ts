@@ -1,5 +1,5 @@
 import SteamWeb from "./SteamWeb";
-import {StartCountIt, StartCountItEvery, consumeIt} from "./helpers/startCountIterator";
+import {StartCountIt, StartCountItEvery, consumeIt} from "./helpers/StartCountIterator";
 import NameIDCollector from "./helpers/NameidCollector";
 import {accountid2steamid, steamid2accountid} from "./utils";
 import {FeeCalculator} from "./helpers/FeeCalculator";
