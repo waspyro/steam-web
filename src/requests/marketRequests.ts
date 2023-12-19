@@ -52,6 +52,7 @@ export const itemOrdersHistogram = (
 ) => [
 	uMake(uMarketOrderHistogram, EMPA, { country, language, currency, item_nameid: nameid, two_factor: 0 }), {
 		headers: {
+			// 'if-modified-since': new Date().toUTCString(),
 			'X-Requested-With': 'XMLHttpRequest',
 			'Accept-Language': 'en-GB,en;q=0.9',
 			'Pragma': 'no-cache',

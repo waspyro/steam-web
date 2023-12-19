@@ -7,7 +7,9 @@ const xPriceGuessed = (str = ''): [
 ] => {
     const digitStr = str.match(/(\d+[.,]?)*/g).join('')
     const digitParts = digitStr.split(/[.,]/)
-    const float = digitParts[digitParts.length-1].length < 3 ? Number(digitParts.pop()) : 0
+    let float = 0
+    if(digitParts.length > 1)
+        float = digitParts[digitParts.length-1].length < 3 ? Number(digitParts.pop()) : 0
     const price = ((Number(digitParts.join('')) * 100 + float) / 100) || null
     const [prefix = '', postfix = ''] = str.split(digitStr)
     const currency = (prefix.trim() + postfix.trim()) || null
