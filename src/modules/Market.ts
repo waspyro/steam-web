@@ -3,7 +3,7 @@ import {
     eligibilityCheck,
     itemOrdersHistogram,
     itemPriceOverview,
-    listingPage, marketHomePage, marketSearch,
+    listingPage, marketHomePage, marketSearch, multibuyPage,
     multisellPage, mySellListings,
     priceHistory, removeMarketListing, sellItem,
 } from "../requests/marketRequests";
@@ -14,8 +14,8 @@ import {
     getSuccessfullText,
     statusOk
 } from "../utils/responseProcessors";
-import parseNameidFromLisngPage from "../parsers/parseNameidFromListingPage";
-import parseNameidFromMultisellPage from "../parsers/parseNameidFromMultisellPage";
+import parseNameidFromListingPage from "../parsers/parseNameidFromListingPage";
+import parseNameidFromMultiPage from "../parsers/parseNameidFromMultiPage";
 import {ErrorWithContext} from "../utils/errors";
 import {Numberable, SessionHTTPResponse} from "../types";
 import xPriceGuessed from "../utils/xPriceGuessed";
@@ -49,15 +49,15 @@ export default class Market extends SteamWebModule {
 
     getItemNameID(item: Item) {
         return this.request(false, listingPage, item)
-        (getSuccessfullText).then(parseNameidFromLisngPage)
+        (getSuccessfullText).then(parseNameidFromListingPage)
     }
 
     getItemsNameIDs = <T extends ReadonlyArray<string>> (
-        appid: Numberable, contextid: Numberable, hashnames: T
+        appid: Numberable, contextid: Numberable, hashnames: T, fromSell?: boolean
     ): Promise<{ [K in T[number]]: string }> => {
-        return this.request(true, multisellPage, appid, contextid, hashnames)
+        return this.request(true, fromSell ? multisellPage : multibuyPage, appid, contextid, hashnames)
         (getSuccessfullText).then(html => {
-            const [nameids, parsedHashNames] = parseNameidFromMultisellPage(html)
+            const [nameids, parsedHashNames] = parseNameidFromMultiPage(html)
             if(parsedHashNames.length !== hashnames.length) throw new Error('got unexpected results')
 
             const results = {}

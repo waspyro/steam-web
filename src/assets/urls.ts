@@ -47,6 +47,7 @@ export const uMarketSearch = uMarket + '/search/render'
 export const uMarketOrderHistogram = uMarket + '/itemordershistogram'
 export const uMarketSellListings = uMarket + '/mylistings/render'
 export const uMarketMultisell = uMarket + '/multisell'
+export const uMarketMultiBuy = uMarket + '/multibuy'
 export const uMarketRemoveListing = uMarket + '/removelisting'
 export const uMarketPriceOverview = uMarket + '/priceoverview'
 

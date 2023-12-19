@@ -1,7 +1,7 @@
 import {
 	uCommunity,
 	uMarket, uMarketEligibilityCheck,
-	uMarketListings,
+	uMarketListings, uMarketMultiBuy,
 	uMarketMultisell,
 	uMarketOrderHistogram,
 	uMarketPriceHistory,
@@ -85,6 +85,10 @@ export const mySellListings = (params: StartCountAble) => [
 
 export const multisellPage = (appid: Numberable, contextid: Numberable, items: readonly string[]) => [
 	uMake(uMarketMultisell, EMPA, {appid, contextid}, items.map(el => ({items: el, qty: 1})), 'brackets')
+] as RequestConstructorReturns
+
+export const multibuyPage = (appid: Numberable, contextid: Numberable, items: readonly string[]) => [
+	uMake(uMarketMultiBuy, EMPA, {appid, contextid}, items.map(el => ({items: el, qty: 1})), 'brackets')
 ] as RequestConstructorReturns
 
 export const removeMarketListing = (sessionid, id) => [
