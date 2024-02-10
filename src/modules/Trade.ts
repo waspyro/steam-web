@@ -10,12 +10,12 @@ import {asJson, asJsonWithField, asSuccessJson, asText, ExpectAndRun, statusOk} 
 import {needsProp} from "../utils/decorators";
 import {
     AcceptTradeOfferResponse,
-    CEconTradeOffer,
+    CEconTradeOffer, ETradeOfferState,
     GetTradeOffersResponse,
     GetTradeOffersSummaryResponse, SendTradeOfferResponse,
     TradeofferAssetRawMinimal
 } from "../types/tradeOfferTypes";
-import {BoolNum} from "../types";
+import {AtLeast, BoolNum} from "../types";
 import {ErrorWithContext} from "../utils/errors";
 import SteamID from "steamid";
 import {EMPA, normalizeTradeofferAssets} from "../utils";
@@ -29,6 +29,22 @@ export class Trade extends SteamWebModule {
     acceptTradeOffer(tradeofferid: string, partnerSteamID: string): Promise<AcceptTradeOfferResponse> {
         return this.request(true, acceptTradeOffer, this.web.session.sessionid, tradeofferid, partnerSteamID, 1, '')
         (ExpectAndRun(statusOk, asJson))
+    }
+
+    acceptCEconTradeOffer(offer: AtLeast<CEconTradeOffer, 'tradeofferid' | 'accountid_other'> ) {
+        return this.acceptTradeOffer(offer.tradeofferid, SteamID.fromIndividualAccountID(offer.accountid_other).toString())
+          .then(res => ({accepted: true, tradeid: res.tradeid}))
+          .catch(e => ({accepted: false, error: e}))
+    }
+
+    async pollTradeOfferUntilNotActive(tradeofferid: string, cb?: (offer: CEconTradeOffer) => number) {
+        const offer = await this.getTradeOffer(tradeofferid)
+        if(offer.trade_offer_state !== ETradeOfferState.active)
+            return offer.trade_offer_state
+        const timeout = cb ? cb(offer) : 10000
+        if(timeout) return new Promise(r => setTimeout(r, timeout))
+          .then(() => this.pollTradeOfferUntilNotActive(tradeofferid, cb))
+        return null
     }
 
     @needsProp('webapi')

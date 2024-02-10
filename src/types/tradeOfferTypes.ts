@@ -12,7 +12,7 @@ export type SendTradeOfferResponse = {
 }
 
 //ETradeOfferState
-const ETradeOfferState = {
+export const ETradeOfferState = {
     'invalid': 1,
     'active': 2,
     'accepted':	3,
